@@ -37,5 +37,11 @@ As of current, there is no particular usage for the application. To use it, one 
 
 ```
 
+# Todo
+
+- Skim through already existing files when using Project Forskan and folders. Supply default resource list as well to extract when extracting.
+- Other servers.
+	
+
 # Coffee
 	¿Can I has coffee?
