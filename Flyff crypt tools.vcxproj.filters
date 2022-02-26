@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\res">
+      <UniqueIdentifier>{5588496c-9ee3-43cc-8917-d2d5888d5e2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\res">
+      <UniqueIdentifier>{63073e29-d68e-4f07-a570-4cdf55c03dde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\crypt">
+      <UniqueIdentifier>{baa9f802-5a27-4a04-915e-f85f5ac13e39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\crypt">
+      <UniqueIdentifier>{476a2092-7f87-46b8-b8b0-421ef4437484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\compression">
+      <UniqueIdentifier>{3b47fb50-8897-4343-aac2-5bd0aba8cd89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\compression">
+      <UniqueIdentifier>{06086e7b-1d09-43eb-8389-393c9d0314aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\util">
+      <UniqueIdentifier>{f1930369-81c3-4a70-934e-117e9f0fe17d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\formats">
+      <UniqueIdentifier>{1602da4a-30ee-43bc-af5e-50ac4e4dece2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\util">
+      <UniqueIdentifier>{ec874ae4-7c4d-4a3f-a575-39d23287abcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\formats">
+      <UniqueIdentifier>{07298efb-c152-4bc9-ab78-f0120dcf63c9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FlyFFCryptTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resource.cpp">
+      <Filter>Source Files\res</Filter>
+    </ClCompile>
+    <ClCompile Include="resourceExtractor.cpp">
+      <Filter>Source Files\res</Filter>
+    </ClCompile>
+    <ClCompile Include="resourceManager.cpp">
+      <Filter>Source Files\res</Filter>
+    </ClCompile>
+    <ClCompile Include="CRC16.cpp">
+      <Filter>Source Files\crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="AES.cpp">
+      <Filter>Source Files\crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="CRC32.cpp">
+      <Filter>Source Files\crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="CRC64.cpp">
+      <Filter>Source Files\crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="compressionEngine.cpp">
+      <Filter>Source Files\compression</Filter>
+    </ClCompile>
+    <ClCompile Include="cryptEngine.cpp">
+      <Filter>Source Files\crypt</Filter>
+    </ClCompile>
+    <ClCompile Include="fileSys.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resourceSettings.cpp">
+      <Filter>Source Files\res</Filter>
+    </ClCompile>
+    <ClCompile Include="resourcePacking.cpp">
+      <Filter>Source Files\res</Filter>
+    </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>Source Files\util</Filter>
+    </ClCompile>
+    <ClCompile Include="ffParser.cpp">
+      <Filter>Source Files\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="ffProps.cpp">
+      <Filter>Source Files\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="resourceMemLoad.cpp">
+      <Filter>Source Files\res</Filter>
+    </ClCompile>
+    <ClCompile Include="ffPropManager.cpp">
+      <Filter>Source Files\formats</Filter>
+    </ClCompile>
+    <ClCompile Include="resourceFinder.cpp">
+      <Filter>Source Files\res</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="rand.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resourceExtractor.h">
+      <Filter>Header Files\res</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files\res</Filter>
+    </ClInclude>
+    <ClInclude Include="resourceManager.h">
+      <Filter>Header Files\res</Filter>
+    </ClInclude>
+    <ClInclude Include="CRC16.h">
+      <Filter>Header Files\crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="CRC32.h">
+      <Filter>Header Files\crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="CRC64.h">
+      <Filter>Header Files\crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="AES.h">
+      <Filter>Header Files\crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="compressionEngine.h">
+      <Filter>Header Files\compression</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptEngine.h">
+      <Filter>Header Files\crypt</Filter>
+    </ClInclude>
+    <ClInclude Include="fileSys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="multiManage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resourcePacking.h">
+      <Filter>Header Files\res</Filter>
+    </ClInclude>
+    <ClInclude Include="resourceSettings.h">
+      <Filter>Header Files\res</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="ffParser.h">
+      <Filter>Header Files\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="ffProps.h">
+      <Filter>Header Files\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="commonTypes.hpp">
+      <Filter>Header Files\util</Filter>
+    </ClInclude>
+    <ClInclude Include="resourceMemLoad.h">
+      <Filter>Header Files\res</Filter>
+    </ClInclude>
+    <ClInclude Include="ffPropManager.h">
+      <Filter>Header Files\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="ffPropSkim.h">
+      <Filter>Header Files\formats</Filter>
+    </ClInclude>
+    <ClInclude Include="paths.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resourceFinder.h">
+      <Filter>Header Files\res</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
