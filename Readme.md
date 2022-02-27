@@ -6,6 +6,10 @@ Other methods were obtained from reverse engineering clients.
 
 This does contain zlib  and crypto++ as eventually It will offer using zlib's compression, and currently it implements sha256 from the crypto++ library.
 
+if you have any questions or concerns
+	Kia#0001 - Discord
+	
+
 # Usages
 As of current, there is no particular usage for the application. To use it, one must edit the main function in the **FlyFFCrypttool.cpp** file to use the implementations - or import the code in your own project.
 
