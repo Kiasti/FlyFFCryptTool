@@ -25,7 +25,7 @@ namespace res
 	namespace file
 	{
 		/** @brief Type enum to use to store statically to differentiate between structures. */
-		enum class Type : unsigned char { def, aes1, aes2, smoke, florist, moon, equinox, forsaken, newFeiFei, custom };
+		enum class Type : unsigned int { Default, AesGow, AesAzure, Insignia, Moon, Equinox, Forsaken, NewFeiFei, Custom };
 
 
 		/** @brief Template member deduction for function 'hasStartPos'
@@ -70,7 +70,7 @@ namespace res
 
 				[[nodiscard]] static long long defaultStartPos() { return 7 + sizeof(short); }
 				[[nodiscard]] unsigned char decryption(unsigned char byData) const;
-				[[nodiscard]] static Type getResourceType() { return Type::def; }
+				[[nodiscard]] static Type getResourceType() { return Type::Default; }
 			};
 
 			struct Res
@@ -176,7 +176,7 @@ namespace res
 				HdrInsignia() : hdrSize(0), fileType(11), byEncryptionKey(0xC4), fileNumber(0) { }
 				explicit HdrInsignia(std::ifstream& ifs);
 				void cleanup() { headerStr.resize(0); }
-				[[nodiscard]] static Type getResourceType() { return Type::def; }
+				[[nodiscard]] static Type getResourceType() { return Type::Insignia; }
 				[[nodiscard]] static long long defaultStartPos() { return sizeof(short); }
 				[[nodiscard]] unsigned char decryptionHdr(unsigned char byData) const;
 				[[nodiscard]] unsigned char decryptionFile(unsigned char byData) const;
@@ -206,7 +206,7 @@ namespace res
 
 				[[nodiscard]] static long long defaultStartPos() { return sizeof(short); }
 				void cleanup() { hdrString.resize(0); }
-				[[nodiscard]] static Type getResourceType() { return Type::aes1; }
+				[[nodiscard]] static Type getResourceType() { return Type::AesGow; }
 			};
 
 			struct HdrAesAzure
@@ -225,7 +225,7 @@ namespace res
 
 				void cleanup() { headerStr.resize(0); }
 				[[nodiscard]] static long long defaultStartPos() { return sizeof(short); }
-				[[nodiscard]] static Type getResourceType() { return Type::aes2; }
+				[[nodiscard]] static Type getResourceType() { return Type::AesAzure; }
 			};
 
 			struct ResAesAzure
@@ -252,7 +252,7 @@ namespace res
 				explicit HdrMoon(std::ifstream& ifs);
 
 				[[nodiscard]] static long long defaultStartPos() { return sizeof(short) + (sizeof(char) * 5); }
-				[[nodiscard]] static Type getResourceType() { return Type::def; }
+				[[nodiscard]] static Type getResourceType() { return Type::Moon; }
 				[[nodiscard]] unsigned char decryption(unsigned char byData) const;
 				void cleanup() { str.resize(0); }
 			};
@@ -298,7 +298,7 @@ namespace res
 				explicit HdrEquinox(std::ifstream& ifs);
 
 				[[nodiscard]] static long long defaultStartPos() { return sizeof(short) * 2 + sizeof(bool); }
-				[[nodiscard]] static Type getResourceType() { return Type::equinox; }
+				[[nodiscard]] static Type getResourceType() { return Type::Equinox; }
 				[[nodiscard]] static unsigned char decrpytion(unsigned char byData, unsigned char key);
 				void cleanup() { hdr.resize(0); }
 			};
@@ -326,7 +326,7 @@ namespace res
 				explicit HdrForasken(std::ifstream& ifs);
 
 				[[nodiscard]] static long long defaultStartPos() { return 0; }
-				[[nodiscard]] static Type getResourceType() { return Type::forsaken; }
+				[[nodiscard]] static Type getResourceType() { return Type::Forsaken; }
 				void cleanup() { hdr.resize(0); }
 
 			};
@@ -445,7 +445,7 @@ namespace res
 				void cleanup() { str.resize(0); }
 
 				[[nodiscard]] static long long defaultStartPos() { return 0; }
-				[[nodiscard]] static Type getResourceType() { return Type::newFeiFei; }
+				[[nodiscard]] static Type getResourceType() { return Type::NewFeiFei; }
 
 			};
 
@@ -485,7 +485,7 @@ namespace res
 				explicit Hdr(std::ifstream& ifs);
 				void cleanup() { hdrString.resize(0); }
 				[[nodiscard]] static long long defaultStartPos() { return 0; }
-				[[nodiscard]] static Type getResourceType() { return Type::custom; }
+				[[nodiscard]] static Type getResourceType() { return Type::Custom; }
 				static void xorDecryption(char* start, const size_t len, unsigned char&& k)
 				{
 					for (size_t i = 0; i < len; )

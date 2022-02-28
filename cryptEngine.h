@@ -22,7 +22,7 @@ namespace cryptEngine
 		static unsigned long encryptFile(const std::string& fileName, const std::string& outFile, const unsigned char* hash, size_t sizeofHash);
 	};
 	
-	enum class saltPos { beg, end };
+	enum class saltPos : int { beg, end };
 	enum class shaEncode { hexLowerCase, hexUpperCase, base64, def };
 	std::string getSha256(const std::string& str, std::string&& salt = shaHash_Forskaen, saltPos&& pos = saltPos::beg, shaEncode&& shaEn = shaEncode::hexLowerCase);
 }
