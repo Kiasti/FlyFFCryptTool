@@ -15,6 +15,7 @@ namespace res::find
 		bool operator()(const vp_Equinox& df) const;
 		bool operator()(const vp_Forsaken& df) const;
 		bool operator()(const vp_NewFeiFei& df) const;
+		bool operator()(const vp_Cloud& df) const;
 		template<typename b> bool operator()(const b&) const { return false; }
 	};
 }

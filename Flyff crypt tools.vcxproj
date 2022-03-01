@@ -163,6 +163,7 @@
     <ClCompile Include="resourceManager.cpp" />
     <ClCompile Include="resourceMemLoad.cpp" />
     <ClCompile Include="resourcePacking.cpp" />
+    <ClCompile Include="resourcePackSettings.cpp" />
     <ClCompile Include="resourceSettings.cpp" />
     <ClCompile Include="resourceSettingsRes.cpp" />
     <ClCompile Include="Util.cpp" />
@@ -192,8 +193,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="resourcePacking.h" />
+    <ClInclude Include="resourcePackSettings.h" />
     <ClInclude Include="resourceSettings.h" />
     <ClInclude Include="resourceSettingsRes.h" />
+    <ClInclude Include="rwIO.h" />
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

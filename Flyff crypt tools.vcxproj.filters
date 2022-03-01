@@ -105,6 +105,9 @@
     <ClCompile Include="resourceSettingsRes.cpp">
       <Filter>Source Files\res</Filter>
     </ClCompile>
+    <ClCompile Include="resourcePackSettings.cpp">
+      <Filter>Source Files\res</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rand.hpp">
@@ -181,6 +184,12 @@
     </ClInclude>
     <ClInclude Include="resourceSettingsRes.h">
       <Filter>Header Files\res</Filter>
+    </ClInclude>
+    <ClInclude Include="resourcePackSettings.h">
+      <Filter>Header Files\res</Filter>
+    </ClInclude>
+    <ClInclude Include="rwIO.h">
+      <Filter>Header Files\util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

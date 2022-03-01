@@ -7,12 +7,7 @@
 
 rfile::flyff::Hdr::Hdr(std::ifstream& ifs) : g_byEncryptionKey(0), bEncryption(false), nMergeFileHeaderSize(0), fileNumber(0)
 {
-	ifs.read(reinterpret_cast<char*>(&g_byEncryptionKey), sizeof(unsigned char));
-	ifs.read(reinterpret_cast<char*>(&bEncryption), sizeof(bool));
-	ifs.read(reinterpret_cast<char*>(&nMergeFileHeaderSize), sizeof(int));
-
-	str.resize(nMergeFileHeaderSize);
-	ifs.read(&str[0], nMergeFileHeaderSize);
+	mainRead(ifs);
 	if (bEncryption)
 		for (auto& c : str)
 			c = static_cast<char>(decryption(c));
@@ -20,6 +15,17 @@ rfile::flyff::Hdr::Hdr(std::ifstream& ifs) : g_byEncryptionKey(0), bEncryption(f
 	memcpy(&version, &str[0], 7);
 	memcpy(&fileNumber, &str[7], sizeof(short));
 }
+
+void rfile::flyff::Hdr::mainRead(std::ifstream& ifs)
+{
+	ifs.read(reinterpret_cast<char*>(&g_byEncryptionKey), sizeof(unsigned char));
+	ifs.read(reinterpret_cast<char*>(&bEncryption), sizeof(bool));
+	ifs.read(reinterpret_cast<char*>(&nMergeFileHeaderSize), sizeof(int));
+
+	str.resize(nMergeFileHeaderSize);
+	ifs.read(&str[0], nMergeFileHeaderSize);
+}
+
 unsigned char rfile::flyff::Hdr::decryption(unsigned char byData) const
 {
 	byData = ~byData ^ g_byEncryptionKey;
@@ -339,6 +345,29 @@ rfile::other::ResForsaken::ResForsaken(const HdrForasken& hdr, std::streampos& s
 
 	memcpy(&fileSize, &hdr.hdr[startPos], sizeof(unsigned long));
 	startPos += sizeof(unsigned long);
+}
+
+// todo : group other structs
+rfile::other::HdrCloud::HdrCloud(std::ifstream& ifs) 
+{
+	mainRead(ifs);
+	// should technically work because byte is min size.
+	if (static_cast<unsigned char>(bEncryption) == ENCR_MARKER1)
+	{
+		g_byEncryptionKey = g_byEncryptionKey ^ ENCR_KEY;
+		bEncryption = false;
+	}
+	else if (static_cast<unsigned char>(bEncryption) == ENCR_MARKER2)
+	{
+		g_byEncryptionKey = g_byEncryptionKey ^ ENCR_KEY;
+		bEncryption = true;
+	}
+
+	for (auto& c : str)
+		c = static_cast<char>(decryption(c));
+
+	memcpy(&version, &str[0], 7);
+	memcpy(&fileNumber, &str[7], sizeof(short));
 }
 
 rfile::feifei::Hdr::Hdr(std::ifstream& ifs) : fileNumber(0), offset(0)

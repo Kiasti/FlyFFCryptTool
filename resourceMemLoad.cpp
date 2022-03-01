@@ -83,6 +83,35 @@ std::string res::mLoad::load::operator()(const vp_Flyff& df) const
 	return "";
 }
 
+
+std::string res::mLoad::load::operator()(const vp_Cloud& df) const
+{
+	if (std::ifstream readingFile(archiveName, std::ios::in | std::ios::binary); readingFile.good())
+	{
+		for (int i = 0; i < df.first.fileNumber; ++i)
+		{
+			if (fileName == df.second[i].fileName)
+			{
+				std::string tempString;
+				tempString.resize(df.second[i].fileSize);
+
+				readingFile.seekg(df.second[i].filePos);
+				readingFile.read(&tempString[0], df.second[i].fileSize);
+
+				if (df.first.bEncryption)
+					for (auto& c : tempString)
+						c = static_cast<char>(df.first.decryption(c));
+
+				readingFile.close();
+				return tempString;
+			}
+		}
+		readingFile.close();
+	}
+	return "";
+}
+
+
 std::string res::mLoad::load::operator()(const vp_Insignia& df) const 
 {
 	if (std::ifstream readingFile(archiveName, std::ios::in | std::ios::binary); readingFile.good())

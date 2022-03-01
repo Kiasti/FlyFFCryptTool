@@ -25,7 +25,7 @@ namespace res
 	namespace file
 	{
 		/** @brief Type enum to use to store statically to differentiate between structures. */
-		enum class Type : unsigned int { Default, AesGow, AesAzure, Insignia, Moon, Equinox, Forsaken, NewFeiFei, Custom };
+		enum class Type : unsigned int { Default, AesGow, AesAzure, Insignia, Moon, Equinox, Forsaken, NewFeiFei, Cloud, Custom };
 
 
 		/** @brief Template member deduction for function 'hasStartPos'
@@ -67,6 +67,7 @@ namespace res
 				Hdr() : g_byEncryptionKey(0), bEncryption(true), nMergeFileHeaderSize(0), fileNumber(0) { }
 				explicit Hdr(std::ifstream& ifs);
 				void cleanup() { str.resize(0); }
+				void mainRead(std::ifstream& ifs);
 
 				[[nodiscard]] static long long defaultStartPos() { return 7 + sizeof(short); }
 				[[nodiscard]] unsigned char decryption(unsigned char byData) const;
@@ -339,6 +340,20 @@ namespace res
 
 				ResForsaken(const HdrForasken& hdr, std::streampos& startPos);
 
+			};
+
+			struct HdrCloud : flyff::Hdr
+			{
+				static constexpr unsigned char ENCR_KEY = 0x79;
+				static constexpr unsigned char ENCR_MARKER1 = 0x98;
+				static constexpr unsigned char ENCR_MARKER2 = 0x99;
+
+				HdrCloud() = default;
+				explicit HdrCloud(std::ifstream& ifs);
+				void cleanup() { str.resize(0); }
+
+				[[nodiscard]] static long long defaultStartPos() { return 7 + sizeof(short); }
+				[[nodiscard]] static Type getResourceType() { return Type::Cloud; }
 			};
 		}
 

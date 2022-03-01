@@ -103,8 +103,8 @@ bool tablesInitialized = false;
 #define RotByteL(a) _rotl(a,8)
 
 // mult 2 elements using gf2_8_poly as a reduction
-inline unsigned char GF2_8_mult(unsigned char a, unsigned char b)
-	{ // todo - make 4x4 table for nibbles, use lookup
+unsigned char GF2_8_mult(unsigned char a, unsigned char b)
+{ // todo - make 4x4 table for nibbles, use lookup
 	unsigned char result = 0;
 
 	// should give 0x57 . 0x13 = 0xFE with poly 0x11B
@@ -125,7 +125,7 @@ inline unsigned char GF2_8_mult(unsigned char a, unsigned char b)
 		b >>= 1;
 		}
 	return result;
-	} // GF2_8_mult
+} // GF2_8_mult
 
 bool CheckLargeTables(const bool create)
 {
@@ -165,7 +165,7 @@ bool CheckLargeTables(const bool create)
 			}
 		else
 			{
-			if (T0[i] != VEC4(a2,a1,a1,a3))
+			if (T0[i] != static_cast<unsigned long>(VEC4(a2,a1,a1,a3)))
 				return false;
 			if (T1[i] != RotByteL(T0[i]))
 				return false;
@@ -173,7 +173,7 @@ bool CheckLargeTables(const bool create)
 				return false;
 			if (T3[i] != RotByteL(T2[i]))
 				return false;
-			if (T4[i] != VEC4(a1,0,0,0))
+			if (T4[i] != static_cast<unsigned long>(VEC4(a1,0,0,0)))
 				return false;
 			if (T5[i] != RotByteL(T4[i]))
 				return false;
@@ -181,7 +181,7 @@ bool CheckLargeTables(const bool create)
 				return false;
 			if (T7[i] != RotByteL(T6[i]))
 				return false;
-			if (I0[i] != VEC4(b1,b2,b3,b4))
+			if (I0[i] != static_cast<unsigned long>(VEC4(b1,b2,b3,b4)))
 				return false;
 			if (I1[i] != RotByte(I0[i]))
 				return false;
@@ -189,7 +189,7 @@ bool CheckLargeTables(const bool create)
 				return false;
 			if (I3[i] != RotByte(I2[i]))
 				return false;
-			if (I4[i] != VEC4(b5,0,0,0))
+			if (I4[i] != static_cast<unsigned long>(VEC4(b5,0,0,0)))
 				return false;
 			if (I5[i] != RotByteL(I4[i]))
 				return false;
@@ -203,8 +203,8 @@ bool CheckLargeTables(const bool create)
 	} // CheckLargeTables
 
 // some functions to create/verify table integrity
-bool CheckInverses(bool create)
-	{
+bool CheckInverses(const bool create)
+{
 	// we'll brute force the inverse table
 	assert(GF2_8_mult(0x57,0x13) == 0xFE); // test these first
 	assert(GF2_8_mult(0x01,0x01) == 0x01);
@@ -217,18 +217,18 @@ bool CheckInverses(bool create)
 	else if (gf2_8_inv[0] != 0)
 		return false;
 	for (a = 1; a <= 255; a++)
-		{
+	{
 		b = 1;
-		while (GF2_8_mult(a,b) != 1)
+		while (GF2_8_mult(static_cast<unsigned char>(a), static_cast<unsigned char>(b)) != 1)
 			b++;
 
 		if (create == true)
 			gf2_8_inv[a] = b;
 		else if (gf2_8_inv[a] != b)
 			return false;
-		}
+	}
 	return true;
-	} // CheckInverses
+} // CheckInverses
 
 unsigned char BitSum(unsigned char byte) 
 	{ // return the sum of bits mod 2

@@ -18,8 +18,9 @@ namespace res
 	using vp_Forsaken	=		ResourceFile<rfile::other::HdrForasken,		rfile::other::ResForsaken>;
 	using vp_OF			=		ResourceFile<rfile::OF::Hdr,				rfile::OF::Res>;
 	using vp_NewFeiFei	=		ResourceFile<rfile::feifei::Hdr,			rfile::feifei::Res>;
+	using vp_Cloud =			ResourceFile<rfile::other::HdrCloud,		rfile::flyff::Res>;
 
-	using fs_Variant	=	std::variant<vp_Flyff, vp_Insignia, vp_AesGow, vp_AesAzure, vp_Moon, vp_Equinox, vp_Forsaken, vp_OF, vp_NewFeiFei>;
+	using fs_Variant	=	std::variant<vp_Flyff, vp_Insignia, vp_AesGow, vp_AesAzure, vp_Moon, vp_Equinox, vp_Forsaken, vp_OF, vp_NewFeiFei, vp_Cloud>;
 
 	namespace props
 	{

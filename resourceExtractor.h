@@ -37,8 +37,8 @@ namespace res::extract
 		void operator()(const vp_Moon& df) const;
 		void operator()(const vp_Equinox& df) const;
 		void operator()(const vp_Forsaken& df) const;
-
 		void operator()(const vp_NewFeiFei& df) const;
+		void operator()(const vp_Cloud& df) const;
 		template<typename b> void operator()(const b&) const { }
 	};
 }

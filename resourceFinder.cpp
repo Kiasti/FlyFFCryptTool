@@ -10,6 +10,13 @@ bool res::find::FindFile::operator()(const vp_Flyff& df) const
 		});
 }
 
+bool res::find::FindFile::operator()(const vp_Cloud& df) const
+{
+	return std::ranges::any_of(df.second.begin(), df.second.end(), [this](const file::flyff::Res& rhs) -> bool {
+		return name == rhs.fileName;
+		});
+}
+
 bool res::find::FindFile::operator()(const vp_Insignia& df) const
 {
 	return std::ranges::any_of(df.second.begin(), df.second.end(), [this](const file::other::ResInsignia& rhs) -> bool {

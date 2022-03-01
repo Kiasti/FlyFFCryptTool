@@ -61,7 +61,8 @@ void cryptEngine::ppAes::encrpytString(std::string& file)
 	std::string temp;
 	temp.reserve(file.length());
 
-	CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption aes(res::file::OF::key.data(), (res::file::OF::key.size()), res::file::OF::iv.data(), (res::file::OF::iv.size())); 
+	CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption aes(res::file::OF::key.data(), static_cast<int>(res::file::OF::key.size()), 
+													  res::file::OF::iv.data(), static_cast<int>(res::file::OF::iv.size())); 
 	CryptoPP::StringSource sss(file, true, new CryptoPP::StreamTransformationFilter(aes, new CryptoPP::StringSink(temp)));
 	file = std::move(temp);
 }
@@ -86,7 +87,7 @@ unsigned long cryptEngine::ppAes::encrpytString(std::string& file, const unsigne
 	for (int i = 1; i < 5; ++i)
 		fileIv[i * 3] = *reinterpret_cast<unsigned char*>(&keyArry + i);
 
-	CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption aes(res::file::OF::key.data(), (res::file::OF::key.size()), fileIv.data(), (fileIv.size()));
+	CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption aes(res::file::OF::key.data(), static_cast<int>(res::file::OF::key.size()), fileIv.data(), static_cast<int>(fileIv.size()));
 	CryptoPP::StringSource sss(file, true, new CryptoPP::StreamTransformationFilter(aes, new CryptoPP::StringSink(temp)));
 	file = std::move(temp);
 	return keyArry;
@@ -99,7 +100,7 @@ unsigned long cryptEngine::ppAes::encrpytString(std::string& file, unsigned shor
 
 	auto fileIv = res::file::OF::iv;
 	fileIv[0] = *reinterpret_cast<unsigned char*>(&crc);
-	CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption aes(res::file::OF::key.data(), (res::file::OF::key.size()), fileIv.data(), (fileIv.size()));
+	CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption aes(res::file::OF::key.data(), static_cast<int>(res::file::OF::key.size()), fileIv.data(), static_cast<int>(fileIv.size()));
 	CryptoPP::StringSource sss(file, true, new CryptoPP::StreamTransformationFilter(aes, new CryptoPP::StringSink(temp)));
 	file = std::move(temp);
 	return 0;
@@ -132,7 +133,7 @@ unsigned long cryptEngine::ppAes::encryptFile(const std::string& fileName, const
 	for (int i = 1; i < 5; ++i)
 		fileIv[i * 3] = *reinterpret_cast<unsigned char*>(&keyArry + i);
 
-	CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption e(res::file::OF::key.data(), (res::file::OF::key.size()), fileIv.data(), (fileIv.size()));
+	CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption e(res::file::OF::key.data(), static_cast<int>(res::file::OF::key.size()), fileIv.data(), static_cast<int>(fileIv.size()));
 	CryptoPP::FileSource sss(fileName.c_str(), true, new CryptoPP::StreamTransformationFilter(e, new CryptoPP::FileSink(outFile.c_str())));
 
 	return keyArry;

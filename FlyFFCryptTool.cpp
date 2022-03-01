@@ -7,17 +7,15 @@
 
 #include "cryptEngine.h"
 
+
+
 /**	@brief	Example usage using the main function for the application. */
 int main()
 {
 	res::manager rm;
 	cryptEngine::defAes::m_crypt.SetParameters(192);
 
-
-	rSetting::Settings sm;
 	
-
-
 	//std::cout << "Please insert Forsaken flyff client folder" << std::endl;
 	//std::getline(std::cin, res::extract::folderHehe);
 	//

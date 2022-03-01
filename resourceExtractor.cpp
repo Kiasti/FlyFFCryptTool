@@ -417,3 +417,41 @@ void res::extract::all::operator()(const vp_NewFeiFei& df) const
 }
 
 
+// todo: group vp_cloud and vp_flyff a bit.
+void res::extract::all::operator()(const vp_Cloud& df) const
+{
+	if (std::ifstream readingFile(archiveName, std::ios::in | std::ios::binary); readingFile.good())
+	{
+		for (int i = 0; i < df.first.fileNumber; ++i)
+		{
+			if (fileName.empty() || fileName == df.second[i].fileName)
+			{
+				std::string tempString;
+				tempString.resize(df.second[i].fileSize);
+
+				readingFile.seekg(df.second[i].filePos);
+				readingFile.read(&tempString[0], df.second[i].fileSize);
+
+				if (df.first.bEncryption)
+					for (auto& c : tempString)
+						c = static_cast<char>(df.first.decryption(c));
+
+				std::string outStr = archiveName;
+				std::filesystem::path p = archiveName;
+				if (p.has_parent_path())
+					outStr = p.parent_path().string();
+				outStr += "/";
+				outStr += df.second[i].fileName;
+				{
+					std::scoped_lock lck(outputFile);
+					std::cout << "extracting " << df.second[i].fileName << " to: " << outStr << "\n";
+				}
+
+				std::ofstream ofs(outStr, std::ios::out | std::ios::binary);
+				ofs.write(&tempString[0], static_cast<long long>(tempString.length()));
+				ofs.close();
+			}
+		}
+		readingFile.close();
+	}
+}
