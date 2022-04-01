@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <map>
 #include <filesystem>
 #include "resource.h"
 #include "resourcePackSettings.h"
@@ -17,24 +16,26 @@ namespace res::settings
 		[[maybe_unused]] bool isCool = false;
 	};
 	
-	class Setting
+	/**	@brief	Main Setting that holds the header settings and the main info regarding 
+				the setting.															*/
+	class Setting final : rwIO
 	{
 		MainInfo mInfo;
 		ResGlobalInfo* gInfo{};
+		ResPackList resPackList;
 
 		public:
 			Setting();
-			explicit Setting(std::ifstream& ifs, unsigned char type = 1);
-			~Setting();
+			explicit Setting(std::ifstream& ifs, rwIOType type = rwIOType::bin);
+			~Setting() override;
+		
 			Setting(Setting const&) = default;
 			Setting& operator =(Setting const&) = default;
 			Setting(Setting&&) = default;
 			Setting& operator=(Setting&&) = default;
 
-			void write(std::ofstream& ofs) const;
-			void read(std::ifstream& ifs);
-			void writeStringFile(std::ofstream& ofs) const;
-			void readStringFile(std::ifstream& ifs);
+			void write(std::ofstream& ofs, rwIOType type = rwIOType::bin) const override;
+			void read(std::ifstream& ifs, rwIOType type = rwIOType::bin) override;
 
 			MainInfo& getMainInfo() { return mInfo; }
 			void setMainInfo(const MainInfo& mf) { mInfo = mf; }
@@ -48,34 +49,32 @@ namespace res::settings
 
 
 	};
+	
+	/**	@brief	List of Settings for different servers.
+		@see	Setting																				*/
 	using SettingsList = std::vector<Setting>;
+
 
 	/** @brief	Handles information related to user settings in regards to extracting, packing,
 	*			and general application use.														*/
 	class Settings final : public ApplicationSettings, public rwIO
 	{
 		SettingsList settings;
-		ResPackList* resPackList {nullptr};
 
 		protected:
-			void read(std::ifstream& ifs) override;
-			void write(std::ofstream& ofs) const override;
-			void readStringFile(std::ifstream&) override;
-			void writeStringFile(std::ofstream&) const override;
+			void read(std::ifstream& ifs, rwIOType type = rwIOType::bin) override;
+			void write(std::ofstream& ofs, rwIOType type = rwIOType::bin) const override;
 
-			[[nodiscard]] bool setClientDirectory(const std::string&) const { return true; }
+			// Todo: Implement a default dir.
+			[[nodiscard]] static bool setClientDirectory(const std::string&) { return true; }
 		public:
 			Settings() = default;
-			~Settings() = default;
+			~Settings() override = default;
 
 			Settings(Settings const&) = default;
 			Settings& operator =(Settings const&) = default;
 			Settings(Settings&&) = default;
 			Settings& operator=(Settings&&) = default;
-
-			bool loadPackFile(std::string_view packFile = "resource.bin");
-			bool loadPackFileStr(std::string_view packFile = "resource.txt");
-			bool loadPackFileParser(std::string_view packFile = "resource.txt");
 
 			bool loadSettings(std::string_view settingsFile = "settings.bin");
 			bool loadSettingsStr(std::string_view settingsFile = "settings.txt");

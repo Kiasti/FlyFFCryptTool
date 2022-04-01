@@ -1,6 +1,11 @@
 #pragma once
 #include <fstream>
 
+enum class rwIOType : unsigned char
+{
+	bin, string, ffParser
+};
+
 struct rwIO
 {
 	rwIO() = default;
@@ -12,8 +17,6 @@ struct rwIO
 	rwIO(rwIO&&) = default;
 	rwIO& operator=(rwIO&&) = default;
 
-	virtual void write(std::ofstream&) const { }
-	virtual void read(std::ifstream&) { }
-	virtual void writeStringFile(std::ofstream&) const { }
-	virtual void readStringFile(std::ifstream&) { }
+	virtual void write(std::ofstream&, rwIOType) const { }
+	virtual void read(std::ifstream&, rwIOType) { }
 };

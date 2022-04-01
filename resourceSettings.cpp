@@ -90,53 +90,30 @@ void checkSettingsBin()
 // Single Setting
 //
 
-rSetting::Setting::Setting()
-= default;
-
-rSetting::Setting::Setting(std::ifstream& ifs, const unsigned char type)
+rSetting::Setting::Setting() = default;
+rSetting::Setting::Setting(std::ifstream& ifs, const rwIOType type)
 {
-	if (type == 1)
-		read(ifs);
-	else
-		readStringFile(ifs);
+	read(ifs, type);
 }
 
-rSetting::Setting::~Setting()
-= default;
-
-void rSetting::Setting::read(std::ifstream& ifs)
+rSetting::Setting::~Setting() = default;
+void rSetting::Setting::read(std::ifstream& ifs, const rwIOType type)
 {
-	mInfo.read(ifs);
+	mInfo.read(ifs, type);
 
 	delete gInfo;
-	gInfo = createGlobalInfo(mInfo.type, ifs);
+	gInfo = createGlobalInfo(mInfo.type, ifs, type);
+
+	resPackList.read(ifs, type);
 }
 
-void rSetting::Setting::write(std::ofstream& ofs) const
+void rSetting::Setting::write(std::ofstream& ofs, const rwIOType type) const
 {
-	mInfo.write(ofs);
+	mInfo.write(ofs, type);
 
 	if (gInfo)
-		gInfo->write(ofs);
+		gInfo->write(ofs, type);
 }
-
-void rSetting::Setting::readStringFile(std::ifstream& ifs)
-{
-	mInfo.readStringFile(ifs);
-	delete gInfo;
-	gInfo = createGlobalInfo(mInfo.type);
-	if (gInfo)
-		gInfo->readStringFile(ifs);
-}
-
-void rSetting::Setting::writeStringFile(std::ofstream& ofs) const
-{
-	mInfo.writeStringFile(ofs);
-
-	if (gInfo)
-		gInfo->writeStringFile(ofs);
-}
-
 
 
 
@@ -144,40 +121,48 @@ void rSetting::Setting::writeStringFile(std::ofstream& ofs) const
 //	Settings Class
 //
 
-void rSetting::Settings::read(std::ifstream& ifs)
+void rSetting::Settings::read(std::ifstream& ifs, const rwIOType type)
 {
 	unsigned char serverAmount = 0;
-	ifs.read(reinterpret_cast<char*>(&serverAmount), sizeof(unsigned char));
+	switch (type)
+	{
+		case rwIOType::bin:
+			ifs.read(reinterpret_cast<char*>(&serverAmount), sizeof(unsigned char));
+			break;
+		case rwIOType::string:
+		{
+			std::string tmp;
+			ifs >> tmp;
+
+			serverAmount = static_cast<unsigned char>(std::stoul(tmp));
+			break;
+		}
+		case rwIOType::ffParser:
+			break;
+	}
+
 	for (int i = 0; i < serverAmount; ++i)
-		settings.emplace_back(Setting(ifs));
+		settings.emplace_back(Setting(ifs, type));
 }
 
-void rSetting::Settings::write(std::ofstream& ofs) const
+void rSetting::Settings::write(std::ofstream& ofs, const rwIOType type) const
 {
-	unsigned char servers = settings.size() >= UCHAR_MAX ? UCHAR_MAX : static_cast<unsigned char>(settings.size());
-	ofs.write(reinterpret_cast<char*>(&servers), sizeof(unsigned char));
-
+	switch (type)
+	{
+		case rwIOType::bin: 
+		{
+			unsigned char servers = settings.size() >= UCHAR_MAX ? UCHAR_MAX : static_cast<unsigned char>(settings.size());
+			ofs.write(reinterpret_cast<char*>(&servers), sizeof(unsigned char));
+			break;
+		}
+		case rwIOType::string: 
+			ofs << std::to_string(settings.size() >= UCHAR_MAX ? UCHAR_MAX : settings.size()) << "\n\t"; 
+			break;
+		case rwIOType::ffParser: break;
+	}
 	for (const auto& setting : settings)
-		setting.write(ofs);
+		setting.write(ofs, type);
 }
-
-void rSetting::Settings::readStringFile(std::ifstream& ifs)
-{
-	std::string tmp;
-	ifs >> tmp;
-
-	const unsigned char servers = static_cast<unsigned char>(std::stoul(tmp));
-	for (int i = 0; i < servers; ++i)
-		settings.emplace_back(Setting(ifs, 0));
-}
-
-void rSetting::Settings::writeStringFile(std::ofstream& ofs) const
-{
-	ofs << std::to_string(settings.size() >= UCHAR_MAX ? UCHAR_MAX : settings.size()) << "\n\t";
-	for (const auto& server : settings)
-		server.writeStringFile(ofs);
-}
-
 
 bool rSetting::Settings::loadSettings(const std::string_view settingsFile)
 {
@@ -195,18 +180,18 @@ bool rSetting::Settings::loadSettingsStr(const std::string_view settingsFile)
 {
 	if (std::ifstream ifs(settingsFile.data(), std::ios::in | std::ios::binary); ifs.good())
 	{
-		readStringFile(ifs);
+		read(ifs, rwIOType::string);
 		ifs.close();
 		return true;
 	}
 	return false;
 }
 
-bool rSetting::Settings::loadSettingsParser(std::string_view settingsFile)
+bool rSetting::Settings::loadSettingsParser(const std::string_view settingsFile)
 {
 	if (std::ifstream ifs(settingsFile.data(), std::ios::in | std::ios::binary); ifs.good())
 	{
-		// read
+		// Todo: ffParser implementation
 		ifs.close();
 		return true;
 	}
@@ -231,49 +216,10 @@ bool rSetting::Settings::saveSettingsStr(const std::string_view settingsFile) co
 {
 	if (std::ofstream ofs(settingsFile.data(), std::ios::out | std::ios::binary); ofs.good())
 	{
-		writeStringFile(ofs);
+		write(ofs, rwIOType::string);
 		ofs.close();
 		return true;
 	}
-	return false;
-}
-
-
-bool rSetting::Settings::loadPackFile(const std::string_view packFile)
-{
-	if (std::ifstream ifs(packFile.data(), std::ios::in | std::ios::binary); ifs.good())
-	{
-		delete resPackList;
-		resPackList = new ResPackList(ifs);
-		ifs.close();
-		return true;
-	}
-	return false;
-}
-
-bool rSetting::Settings::loadPackFileStr(const std::string_view packFile)
-{
-	if (std::ifstream ifs(packFile.data(), std::ios::in | std::ios::binary); ifs.good())
-	{
-		delete resPackList;
-		resPackList = new ResPackList(ifs, false);
-		ifs.close();
-		return true;
-	}
-	return false;
-}
-
-bool rSetting::Settings::loadPackFileParser(const std::string_view packFile)
-{
-	if (std::ifstream ifs(packFile.data(), std::ios::in | std::ios::binary); ifs.good())
-	{
-		delete resPackList;
-		resPackList = new ResPackList;
-		//resPackList.readParser(); // flyff parser instead
-		ifs.close();
-		return true;
-	}
-
 	return false;
 }
 

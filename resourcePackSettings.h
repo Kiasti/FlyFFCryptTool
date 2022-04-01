@@ -24,7 +24,7 @@ namespace res::settings
 	struct FileSelectionList final : std::array<std::vector<std::string>, MAX>, rwIO
 	{
 		FileSelectionList() = default;
-		explicit FileSelectionList(std::ifstream & ifs, bool bin = true);
+		explicit FileSelectionList(std::ifstream & ifs, rwIOType type = rwIOType::bin);
 		~FileSelectionList() override = default;
 
 		FileSelectionList(FileSelectionList const&) = default;
@@ -32,40 +32,26 @@ namespace res::settings
 		FileSelectionList(FileSelectionList&&) = default;
 		FileSelectionList& operator=(FileSelectionList&&) = default;
 
-		void read(std::ifstream & ifs) override;
-		void write(std::ofstream & ofs) const override;
-		void readStringFile(std::ifstream & ifs) override;
-		void writeStringFile(std::ofstream & ofs) const override;
+		void read(std::ifstream & ifs, rwIOType type = rwIOType::bin) override;
+		void write(std::ofstream & ofs, rwIOType type = rwIOType::bin) const override;
 	};
 
+	// Forward declaration.
 	struct ResInnerInfo;
-	struct ResourceSetting final : rwIO
-	{
-		ResInnerInfo* ptr{ nullptr };
-		FileSelectionList fs;
 
-		ResourceSetting() = default;
-		explicit ResourceSetting(std::ifstream& ifs, bool bin = true);
-		~ResourceSetting() override = default;
 
-		ResourceSetting(ResourceSetting const&) = default;
-		ResourceSetting& operator =(ResourceSetting const&) = default;
-		ResourceSetting(ResourceSetting&&) = default;
-		ResourceSetting& operator=(ResourceSetting&&) = default;
+	/**	@brief	A single '.res' file for packing and also contains the name and a list of
+				FileSeletionStatements. Also contains the settings for the 'Resource'.
 
-		void read(std::ifstream&) override;
-		void write(std::ofstream&) const override;
-		void readStringFile(std::ifstream&) override;
-		void writeStringFile(std::ofstream&) const override;
-	};
-
+		@see	ResInnerInfo, FileSelectionList, rfile									*/
 	struct ResPack final : rwIO
 	{
 		char name[128]{};
-		ResourceSetting rs;
+		ResInnerInfo* ptr{ nullptr };
+		FileSelectionList fs;
 
 		ResPack() = default;
-		explicit ResPack(std::ifstream& ifs, bool bin = true);
+		explicit ResPack(std::ifstream& ifs, rwIOType type = rwIOType::bin);
 		~ResPack() override = default;
 
 		ResPack(ResPack const&) = default;
@@ -73,10 +59,8 @@ namespace res::settings
 		ResPack(ResPack&&) = default;
 		ResPack& operator=(ResPack&&) = default;
 
-		void read(std::ifstream&) override;
-		void write(std::ofstream&) const override;
-		void readStringFile(std::ifstream&) override;
-		void writeStringFile(std::ofstream&) const override;
+		void read(std::ifstream&, rwIOType type = rwIOType::bin) override;
+		void write(std::ofstream&, rwIOType type = rwIOType::bin) const override;
 	};
 
 	struct ResPackList final : std::vector<ResPack>, rwIO
@@ -85,18 +69,16 @@ namespace res::settings
 		long long maxSize{};
 
 		ResPackList() = default;
-		explicit ResPackList(std::ifstream& ifs, bool bin = true);
-		~ResPackList() override = default;
+		explicit ResPackList(std::ifstream& ifs, rwIOType type = rwIOType::bin);
+		~ResPackList() = default;
 
 		ResPackList(ResPackList const&) = default;
 		ResPackList& operator =(ResPackList const&) = default;
 		ResPackList(ResPackList&&) = default;
 		ResPackList& operator=(ResPackList&&) = default;
 
-		void read(std::ifstream&) override;
-		void write(std::ofstream&) const override;
-		void readStringFile(std::ifstream&) override;
-		void writeStringFile(std::ofstream&) const override;
+		void read(std::ifstream&, rwIOType type = rwIOType::bin) override;
+		void write(std::ofstream&, rwIOType type = rwIOType::bin) const override;
 	};
 
 }

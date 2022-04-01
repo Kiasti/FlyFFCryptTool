@@ -307,10 +307,12 @@ void res::extract::all::operator()(const vp_Forsaken& df) const
 	std::ranges::transform(fileName, fileName.begin(), [](const unsigned char c) { return std::tolower(c); });
 	std::string cpyName = fileName;
 	if (!fileName.empty())
-		cpyName = cryptEngine::getSha256(fileName);
+		cpyName = cryptEngine::getSha256(fileName, cryptEngine::shaHash_Forskaen);
 
 	std::filesystem::path tempPath = archiveName;
 	//replace .fast with .fly
+
+	std::string xorKey = fileName;
 	tempPath.replace_extension(".fly");
 	if (exists(tempPath))
 	{
@@ -327,18 +329,18 @@ void res::extract::all::operator()(const vp_Forsaken& df) const
 					readingFile.seekg(df.second[i].offset);
 					readingFile.read(&tempString[0], df.second[i].fileSize);
 					
-					if (!fileName.empty())
+					if (!xorKey.empty())
 					{
 						unsigned long fileNameCount = 0;
 						for (char& j : tempString)
 						{
-							unsigned char fNameChar = fileName[fileNameCount];
-							unsigned char result = ~j ^ (fNameChar * -1);
+							unsigned char fNameChar = xorKey[fileNameCount];
+							unsigned char result = ~j ^ fNameChar * -1;
 							result = static_cast<unsigned char>((result << 4) | (result >> 4));
 							j = static_cast<char>(result);
 
 							fileNameCount++;
-							if (fileNameCount >= fileName.length())
+							if (fileNameCount >= xorKey.length())
 								fileNameCount = 0;
 						}
 					}

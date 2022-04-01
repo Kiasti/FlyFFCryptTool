@@ -25,7 +25,7 @@ namespace res
 	namespace file
 	{
 		/** @brief Type enum to use to store statically to differentiate between structures. */
-		enum class Type : unsigned int { Default, AesGow, AesAzure, Insignia, Moon, Equinox, Forsaken, NewFeiFei, Cloud, Custom };
+		enum class Type : unsigned int { Default, AesGow, AesAzure, Insignia, Moon, Equinox, Forsaken, NewFeiFei, Cloud, Insanity, Custom };
 
 
 		/** @brief Template member deduction for function 'hasStartPos'
@@ -42,12 +42,17 @@ namespace res
 		template <typename T, typename U = int> struct hasRType : std::false_type { };
 		template <typename T> struct hasRType<T, decltype((void)T::getResourceType(), 0)> : std::true_type { };
 
+		template <typename T, typename U = int> struct hasDoInHdr : std::false_type { };
+		template <typename T> struct hasDoInHdr<T, decltype(T::isHdrResRead, 0)> : std::true_type { };
+
 		// todo: fix hasCleanup
 		template <typename T, typename U = int> struct hasCleanup : std::false_type { };
 		template <typename T> struct hasCleanup<T, decltype((void)T::cleanup(), 0)> : std::true_type { };
 
 
-		namespace other { struct HdrAesGOW; }
+		namespace other {
+			struct ResInsanity;
+			struct HdrAesGOW; }
 
 		/** @brief Main types for the game "FlyFF" */
 		namespace flyff
@@ -324,7 +329,7 @@ namespace res
 
 				std::string hdr;
 				HdrForasken() : fileNumber(0) { }
-				explicit HdrForasken(std::ifstream& ifs);
+				HdrForasken(std::ifstream& ifs);
 
 				[[nodiscard]] static long long defaultStartPos() { return 0; }
 				[[nodiscard]] static Type getResourceType() { return Type::Forsaken; }
@@ -354,6 +359,40 @@ namespace res
 
 				[[nodiscard]] static long long defaultStartPos() { return 7 + sizeof(short); }
 				[[nodiscard]] static Type getResourceType() { return Type::Cloud; }
+			};
+
+			struct HdrInsanity
+			{
+				unsigned char k525 = 0xf0; // key
+				unsigned char b{};
+				char theBadWord[16]{};
+				unsigned short fileNumber{};
+				unsigned char qq{};
+
+				unsigned char k526{0};
+
+				static constexpr bool isHdrResRead = true;
+				HdrInsanity() = default;
+				explicit HdrInsanity(std::ifstream& ifs);
+
+				static constexpr unsigned charxor = 0x79; // reoccuring key
+				std::vector<ResInsanity> doInHdr(std::ifstream& ifs);
+				static void cleanup() { }
+				[[nodiscard]] static long long defaultStartPos() { return 0; }
+				[[nodiscard]] unsigned char decryption(unsigned char byData) const;
+				[[nodiscard]] static Type getResourceType() { return Type::Insanity; }
+			};
+
+			struct ResInsanity
+			{
+				short fileNameLen;
+				std::string fileName;
+				unsigned long size;
+				unsigned long time;
+				unsigned long offset;
+				unsigned char key = 0xf0;
+
+				explicit ResInsanity(std::ifstream &ifs);
 			};
 		}
 

@@ -6,21 +6,23 @@
 #include <variant>
 #include "fileSys.h"
 #include <shared_mutex>
+#include <iostream>
 
 namespace res
 {
 	using vp_Flyff		=		ResourceFile<rfile::flyff::Hdr,				rfile::flyff::Res>;
-	using vp_Insignia	=		ResourceFile<rfile::other::HdrInsignia,		rfile::other::ResInsignia>;
-	using vp_AesGow		=		ResourceFile<rfile::other::HdrAesGOW,		rfile::flyff::Res>;
-	using vp_AesAzure	=		ResourceFile<rfile::other::HdrAesAzure,		rfile::other::ResAesAzure>;
-	using vp_Moon		=		ResourceFile<rfile::other::HdrMoon,			rfile::other::ResMoon>;
-	using vp_Equinox	=		ResourceFile<rfile::other::HdrEquinox,		rfile::other::ResEquinox>;
-	using vp_Forsaken	=		ResourceFile<rfile::other::HdrForasken,		rfile::other::ResForsaken>;
+	using vp_Insignia	=		ResourceFile<rFileOther::HdrInsignia,		rFileOther::ResInsignia>;
+	using vp_AesGow		=		ResourceFile<rFileOther::HdrAesGOW,			rfile::flyff::Res>;
+	using vp_AesAzure	=		ResourceFile<rFileOther::HdrAesAzure,		rFileOther::ResAesAzure>;
+	using vp_Moon		=		ResourceFile<rFileOther::HdrMoon,			rFileOther::ResMoon>;
+	using vp_Equinox	=		ResourceFile<rFileOther::HdrEquinox,		rFileOther::ResEquinox>;
+	using vp_Forsaken	=		ResourceFile<rFileOther::HdrForasken,		rFileOther::ResForsaken>;
 	using vp_OF			=		ResourceFile<rfile::OF::Hdr,				rfile::OF::Res>;
 	using vp_NewFeiFei	=		ResourceFile<rfile::feifei::Hdr,			rfile::feifei::Res>;
-	using vp_Cloud =			ResourceFile<rfile::other::HdrCloud,		rfile::flyff::Res>;
+	using vp_Cloud		=		ResourceFile<rFileOther::HdrCloud,			rfile::flyff::Res>;
+	using vp_Insanity	=		ResourceFile<rFileOther::HdrInsanity,		rFileOther::ResInsanity>;
 
-	using fs_Variant	=	std::variant<vp_Flyff, vp_Insignia, vp_AesGow, vp_AesAzure, vp_Moon, vp_Equinox, vp_Forsaken, vp_OF, vp_NewFeiFei, vp_Cloud>;
+	using fs_Variant	=	std::variant<vp_Flyff, vp_Insignia, vp_AesGow, vp_AesAzure, vp_Moon, vp_Equinox, vp_Forsaken, vp_OF, vp_NewFeiFei, vp_Cloud, vp_Insanity>;
 
 	namespace props
 	{
@@ -61,7 +63,13 @@ namespace res
 					if (const auto it = resourceList.find(fileName); it == resourceList.end())
 					{
 						auto first = T::first_type(ifs);
-						auto second = loadResource<T::first_type, T::second_type::value_type>(first);
+
+						decltype(typename T::second_type()) second{};						
+						if constexpr(rfile::hasDoInHdr<typename T::first_type>::value)
+							second = first.doInHdr(ifs);
+						else 
+							second = loadResource<T::first_type, T::second_type::value_type>(first);
+
 						first.cleanup();
 
 						std::scoped_lock lck(muxResList);
@@ -81,7 +89,8 @@ namespace res
 				for (const auto list = fs::getPackedFiles(std::move(folderName), std::move(ext)); auto & val : list)
 				{
 					std::string const str = val.string();
-					auto fut = std::async(std::launch::async, &manager::loadPackedFile<T>, this, str);
+					//auto fut = std::async(std::launch::async, &manager::loadPackedFile<T>, this, str);
+					loadPackedFile<T>(str);
 				}
 			}
 
@@ -105,9 +114,10 @@ namespace res
 			void extractAllFromArchive(const std::string& archiveName);
 			void extractAllArchives();
 
-			void loadProjectForsaken();
+			void loadProject();
 
 			std::pair<ResourceMapIter, bool> findFile(std::string&& fileName);
 			std::pair<ResourceMapIter, bool> findFile(const std::string& fileName);
+			std::pair<ResourceMapIter, bool> testEntropia(const std::string& fileName);
 	};
 }

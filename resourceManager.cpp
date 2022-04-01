@@ -58,7 +58,7 @@ void res::manager::loadPackedAesAzure(const std::string& fileName)	{	loadPackedF
 void res::manager::loadPackedOF(const std::string& fileName)		{	loadPackedFile<vp_OF>(fileName);		}
 void res::manager::loadPackedFlorist(const std::string& fileName)	{	loadPackedFile<vp_Insignia>(fileName);	}
 
-void res::manager::loadProjectForsaken()
+void res::manager::loadProject()
 {
 	if (!propInfo)
 		propInfo = new props::propData(this);
@@ -103,4 +103,16 @@ void res::manager::extractAllArchives()
 	{
 		auto fut = std::async(std::launch::async, &manager::extractAllFromArchive, this, key);
 	}
+}
+
+
+
+std::pair<res::manager::ResourceMapIter, bool> res::manager::testEntropia(const std::string& fileName)
+{
+	for (auto iter = resourceList.begin(); iter != resourceList.end(); ++iter)
+	{
+		if (auto res = std::visit(find::findEntropia(fileName), iter->second); res)
+			return std::make_pair(iter, res);
+	}
+	return std::make_pair(resourceList.end(), false);
 }

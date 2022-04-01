@@ -23,7 +23,7 @@ namespace res::settings
 	struct ResGlobalInfo : rwIO
 	{
 		ResGlobalInfo() = default;
-		explicit ResGlobalInfo(std::ifstream&, bool) { }
+		explicit ResGlobalInfo(std::ifstream&, rwIOType) { }
 		~ResGlobalInfo() override = default;
 
 		ResGlobalInfo(ResGlobalInfo const&) = default;
@@ -31,10 +31,8 @@ namespace res::settings
 		ResGlobalInfo(ResGlobalInfo&&) = default;
 		ResGlobalInfo& operator=(ResGlobalInfo&&) = default;
 
-		void write(std::ofstream&) const override {}
-		void read(std::ifstream&) override {}
-		void writeStringFile(std::ofstream&) const override {}
-		void readStringFile(std::ifstream&) override {}
+		void write(std::ofstream&, rwIOType) const override {}
+		void read(std::ifstream&, rwIOType) override {}
 	};
 
 	struct ForsakenGlobalInfo final : ResGlobalInfo
@@ -45,17 +43,15 @@ namespace res::settings
 	
 		ForsakenGlobalInfo() = default;
 		~ForsakenGlobalInfo() override = default;
-		explicit ForsakenGlobalInfo(std::ifstream& ifs, bool bin = true);
+		explicit ForsakenGlobalInfo(std::ifstream& ifs, rwIOType type = rwIOType::bin);
 
 		ForsakenGlobalInfo(ForsakenGlobalInfo const&) = default;
 		ForsakenGlobalInfo& operator =(ForsakenGlobalInfo const&) = default;
 		ForsakenGlobalInfo(ForsakenGlobalInfo&&) = default;
 		ForsakenGlobalInfo& operator=(ForsakenGlobalInfo&&) = default;
 	
-		void write(std::ofstream& ofs) const override;
-		void read(std::ifstream& ifs) override;
-		void writeStringFile(std::ofstream& ofs) const override;
-		void readStringFile(std::ifstream& ifs) override;
+		void write(std::ofstream& ofs, rwIOType type) const override;
+		void read(std::ifstream& ifs, rwIOType type) override;
 	};
 
 	struct EquinoxGlobalInfo final : ResGlobalInfo
@@ -64,7 +60,7 @@ namespace res::settings
 		std::array<unsigned char, 256> keyArr{};
 
 		EquinoxGlobalInfo() = default;
-		explicit EquinoxGlobalInfo(std::ifstream& ifs, bool bin = true);
+		explicit EquinoxGlobalInfo(std::ifstream& ifs, rwIOType type = rwIOType::bin);
 		~EquinoxGlobalInfo() override = default;
 
 		EquinoxGlobalInfo(EquinoxGlobalInfo const&) = default;
@@ -72,10 +68,8 @@ namespace res::settings
 		EquinoxGlobalInfo(EquinoxGlobalInfo&&) = default;
 		EquinoxGlobalInfo& operator=(EquinoxGlobalInfo&&) = default;
 	
-		void write(std::ofstream& ofs) const override;
-		void read(std::ifstream& ifs) override;
-		void writeStringFile(std::ofstream& ofs) const override;
-		void readStringFile(std::ifstream& ifs) override;
+		void write(std::ofstream& ofs, rwIOType type) const override;
+		void read(std::ifstream& ifs, rwIOType type) override;
 	};
 
 	struct InsigniaGlobalInfo final : ResGlobalInfo
@@ -86,7 +80,7 @@ namespace res::settings
 		unsigned short offsetPos{}; // not defaultly in
 	
 		InsigniaGlobalInfo() = default;
-		explicit InsigniaGlobalInfo(std::ifstream& ifs, bool bin = true);
+		explicit InsigniaGlobalInfo(std::ifstream& ifs, rwIOType type = rwIOType::bin);
 
 		~InsigniaGlobalInfo() override = default;
 
@@ -95,10 +89,8 @@ namespace res::settings
 		InsigniaGlobalInfo(InsigniaGlobalInfo&&) = default;
 		InsigniaGlobalInfo& operator=(InsigniaGlobalInfo&&) = default;
 	
-		void write(std::ofstream&) const override;
-		void read(std::ifstream&) override;
-		void writeStringFile(std::ofstream&) const override;
-		void readStringFile(std::ifstream&) override;
+		void write(std::ofstream&, rwIOType type) const override;
+		void read(std::ifstream&, rwIOType type) override;
 	};
 
 	struct CloudGlobalInfo final : ResGlobalInfo
@@ -106,17 +98,15 @@ namespace res::settings
 		std::array<unsigned char, 3> keyTable{};
 	
 		CloudGlobalInfo() = default;
-		explicit CloudGlobalInfo(std::ifstream& ifs, bool bin = true);
+		explicit CloudGlobalInfo(std::ifstream& ifs, rwIOType type = rwIOType::bin);
 		~CloudGlobalInfo() override = default;
 		CloudGlobalInfo(CloudGlobalInfo const&) = default;
 		CloudGlobalInfo& operator =(CloudGlobalInfo const&) = default;
 		CloudGlobalInfo(CloudGlobalInfo&&) = default;
 		CloudGlobalInfo& operator=(CloudGlobalInfo&&) = default;
 	
-		void write(std::ofstream& ofs) const override;
-		void read(std::ifstream& ifs) override;
-		void writeStringFile(std::ofstream& ofs) const override;
-		void readStringFile(std::ifstream& ifs) override;
+		void write(std::ofstream& ofs, rwIOType type) const override;
+		void read(std::ifstream& ifs, rwIOType type) override;
 	};
 
 	struct MoonGlobalInfo final : ResGlobalInfo
@@ -124,17 +114,15 @@ namespace res::settings
 		unsigned char hardcodedKey{};
 	
 		MoonGlobalInfo() = default;
-		explicit MoonGlobalInfo(std::ifstream& ifs, bool bin = true);
+		explicit MoonGlobalInfo(std::ifstream& ifs, rwIOType type = rwIOType::bin);
 		~MoonGlobalInfo() override = default;
 		MoonGlobalInfo(MoonGlobalInfo const&) = default;
 		MoonGlobalInfo& operator =(MoonGlobalInfo const&) = default;
 		MoonGlobalInfo(MoonGlobalInfo&&) = default;
 		MoonGlobalInfo& operator=(MoonGlobalInfo&&) = default;
 	
-		void write(std::ofstream& ofs) const override;
-		void read(std::ifstream& ifs) override;
-		void writeStringFile(std::ofstream& ofs) const override;
-		void readStringFile(std::ifstream& ifs) override;
+		void write(std::ofstream& ofs, rwIOType type) const override;
+		void read(std::ifstream& ifs, rwIOType type) override;
 	};
 
 	struct AesGlobalInfo final : ResGlobalInfo
@@ -142,7 +130,7 @@ namespace res::settings
 		std::array<unsigned char, 24> keyArr{};
 	
 		AesGlobalInfo() = default;
-		explicit AesGlobalInfo(std::ifstream& ifs, bool bin = true);
+		explicit AesGlobalInfo(std::ifstream& ifs, rwIOType type = rwIOType::bin);
 		~AesGlobalInfo() override = default;
 
 		AesGlobalInfo(AesGlobalInfo const&) = default;
@@ -150,10 +138,8 @@ namespace res::settings
 		AesGlobalInfo(AesGlobalInfo&&) = default;
 		AesGlobalInfo& operator=(AesGlobalInfo&&) = default;
 	
-		void write(std::ofstream& ofs) const override;
-		void read(std::ifstream& ifs) override;
-		void writeStringFile(std::ofstream& ofs) const override;
-		void readStringFile(std::ifstream& ifs) override;
+		void write(std::ofstream& ofs, rwIOType type) const override;
+		void read(std::ifstream& ifs, rwIOType type) override;
 	};
 
 
@@ -183,10 +169,8 @@ namespace res::settings
 		DefaultInnerInfo(DefaultInnerInfo&&) = default;
 		DefaultInnerInfo& operator=(DefaultInnerInfo&&) = default;
 	
-		void write(std::ofstream& ofs) const override;
-		void read(std::ifstream& ifs) override;
-		void writeStringFile(std::ofstream& ofs) const override;
-		void readStringFile(std::ifstream& ifs) override;
+		void write(std::ofstream& ofs, rwIOType type) const override;
+		void read(std::ifstream& ifs, rwIOType type) override;
 	};
 
 
@@ -202,10 +186,8 @@ namespace res::settings
 		InsigniaInnerInfo(InsigniaInnerInfo&&) = default;
 		InsigniaInnerInfo& operator=(InsigniaInnerInfo&&) = default;
 
-		void write(std::ofstream& ofs) const override;
-		void read(std::ifstream& ifs) override;
-		void writeStringFile(std::ofstream& ofs) const override;
-		void readStringFile(std::ifstream& ifs) override;
+		void write(std::ofstream& ofs, rwIOType type) const override;
+		void read(std::ifstream& ifs, rwIOType type) override;
 	};
 
 
@@ -220,10 +202,8 @@ namespace res::settings
 		AesInnerInfo(AesInnerInfo&&) = default;
 		AesInnerInfo& operator=(AesInnerInfo&&) = default;
 	
-		void write(std::ofstream& ofs) const override;
-		void read(std::ifstream& ifs) override;
-		void writeStringFile(std::ofstream& ofs) const override;
-		void readStringFile(std::ifstream& ifs) override;
+		void write(std::ofstream& ofs, rwIOType type) const override;
+		void read(std::ifstream& ifs, rwIOType type) override;
 	};
 
 	struct EquinoxInnerInfo final : ResInnerInfo
@@ -242,10 +222,8 @@ namespace res::settings
 		EquinoxInnerInfo(EquinoxInnerInfo&&) = default;
 		EquinoxInnerInfo& operator=(EquinoxInnerInfo&&) = default;
 	
-		void write(std::ofstream& ofs) const override;
-		void read(std::ifstream& ifs) override;
-		void writeStringFile(std::ofstream& ofs) const override;
-		void readStringFile(std::ifstream& ifs) override;
+		void write(std::ofstream& ofs, rwIOType type) const override;
+		void read(std::ifstream& ifs, rwIOType type) override;
 	};
 
 	struct MoonInnerInfo final : ResInnerInfo
@@ -261,17 +239,20 @@ namespace res::settings
 		MoonInnerInfo(MoonInnerInfo&&) = default;
 		MoonInnerInfo& operator=(MoonInnerInfo&&) = default;
 	
-		void write(std::ofstream& ofs) const override;
-		void read(std::ifstream& ifs) override;
-		void writeStringFile(std::ofstream& ofs) const override;
-		void readStringFile(std::ifstream& ifs) override;
+		void write(std::ofstream& ofs, rwIOType type) const override;
+		void read(std::ifstream& ifs, rwIOType type) override;
 	};
+
+	// Preemptive struct definitions.
+	using InsanityInnerInfo = ResInnerInfo;
+	using InsanityGlobalInfo = ResGlobalInfo;
 
 	inline ResInnerInfo* createInnerInfo(const file::Type ft)
 	{
 		switch (ft)
 		{
 			case file::Type::Default:
+			case file::Type::Cloud:
 				return new DefaultInnerInfo;
 			case file::Type::AesGow:
 			case file::Type::AesAzure:
@@ -285,6 +266,8 @@ namespace res::settings
 			case file::Type::NewFeiFei:
 			case file::Type::Forsaken:
 				return new ResInnerInfo;
+			case file::Type::Insanity:
+				return new InsanityInnerInfo;
 			case file::Type::Custom:
 				return nullptr;
 		}
@@ -311,31 +294,39 @@ namespace res::settings
 				return new ResGlobalInfo;
 			case file::Type::Forsaken:
 				return new ForsakenGlobalInfo;
+			case file::Type::Cloud:
+				return new CloudGlobalInfo;
+			case file::Type::Insanity:
+				return new InsanityGlobalInfo;
 			case file::Type::Custom:
 				return nullptr;
 		}
 		return nullptr;
 	}
 
-	inline ResGlobalInfo* createGlobalInfo(const file::Type ft, std::ifstream& ifs, bool bin = true)
+	inline ResGlobalInfo* createGlobalInfo(const file::Type ft, std::ifstream& ifs, const rwIOType type)
 	{
 		switch (ft)
 		{
 			case file::Type::Default:
-				return new ResGlobalInfo(ifs, bin);
+				return new ResGlobalInfo(ifs, type);
 			case file::Type::AesGow:
 			case file::Type::AesAzure:
-				return new AesGlobalInfo(ifs, bin);
+				return new AesGlobalInfo(ifs, type);
 			case file::Type::Insignia:
-				return new InsigniaGlobalInfo(ifs, bin);
+				return new InsigniaGlobalInfo(ifs, type);
 			case file::Type::Moon:
-				return new MoonGlobalInfo(ifs, bin);
+				return new MoonGlobalInfo(ifs, type);
 			case file::Type::Equinox:
-				return new EquinoxGlobalInfo(ifs, bin);
+				return new EquinoxGlobalInfo(ifs, type);
 			case file::Type::NewFeiFei:
-				return new ResGlobalInfo(ifs, bin);
+				return new ResGlobalInfo(ifs, type);
 			case file::Type::Forsaken:
-				return new ForsakenGlobalInfo(ifs, bin);
+				return new ForsakenGlobalInfo(ifs, type);
+			case file::Type::Cloud:
+				return new CloudGlobalInfo(ifs, type);
+			case file::Type::Insanity:
+				return new InsanityGlobalInfo(ifs, type);
 			case file::Type::Custom:
 				return nullptr;
 		}
@@ -356,9 +347,7 @@ namespace res::settings
 		MainInfo(MainInfo&&) = default;
 		MainInfo& operator=(MainInfo&&) = default;
 
-		void write(std::ofstream& ofs) const override;
-		void read(std::ifstream& ifs) override;
-		void writeStringFile(std::ofstream& ofs) const override;
-		void readStringFile(std::ifstream& ifs) override;
+		void write(std::ofstream& ofs, rwIOType type) const override;
+		void read(std::ifstream& ifs, rwIOType type) override;
 	};
 }

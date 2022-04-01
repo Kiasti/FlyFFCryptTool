@@ -333,6 +333,11 @@ rfile::other::HdrForasken::HdrForasken(std::ifstream& ifs) : fileNumber(0)
 
 rfile::other::ResForsaken::ResForsaken(const HdrForasken& hdr, std::streampos& startPos) : stringSize(0), offset(0), fileSize(0)
 {
+	unsigned long entropia;
+	memcpy(&entropia, &hdr.hdr[startPos], sizeof(unsigned long));
+	if (entropia == 0xFFFFFFFF)
+		startPos += sizeof(unsigned long);
+
 	memcpy(&stringSize, &hdr.hdr[startPos], sizeof(unsigned long));
 	startPos += sizeof(unsigned long);
 
@@ -343,6 +348,11 @@ rfile::other::ResForsaken::ResForsaken(const HdrForasken& hdr, std::streampos& s
 	memcpy(&offset, &hdr.hdr[startPos], sizeof(unsigned long));
 	startPos += sizeof(unsigned long);
 
+	if (entropia == 0xFFFFFFFF)
+	{
+		offset = -offset;
+		fileSize += 10;
+	}
 	memcpy(&fileSize, &hdr.hdr[startPos], sizeof(unsigned long));
 	startPos += sizeof(unsigned long);
 }
@@ -351,7 +361,7 @@ rfile::other::ResForsaken::ResForsaken(const HdrForasken& hdr, std::streampos& s
 rfile::other::HdrCloud::HdrCloud(std::ifstream& ifs) 
 {
 	mainRead(ifs);
-	// should technically work because byte is min size.
+	// should technically work because byte is min size. but havent tested.
 	if (static_cast<unsigned char>(bEncryption) == ENCR_MARKER1)
 	{
 		g_byEncryptionKey = g_byEncryptionKey ^ ENCR_KEY;
@@ -388,3 +398,65 @@ rfile::feifei::Res::Res(const Hdr& header, std::streampos & pos) : uid(0), offse
 	memcpy(this, &header.str[pos], sizeof(Res));
 	pos += sizeof(Res);
 }
+
+
+// todo: Reverse engineer Insanity Flyff encrpytion.
+rFileOther::HdrInsanity::HdrInsanity(std::ifstream& ifs)
+{
+	ifs.read(reinterpret_cast<char*>(&k525), sizeof(unsigned char)); // =
+	ifs.read(reinterpret_cast<char*>(&b), sizeof(unsigned char)); // r
+
+	ifs.read(theBadWord, 16); // "V0.FUCKYOU...."
+
+	ifs.read(reinterpret_cast<char*>(&fileNumber), sizeof(unsigned short));
+	ifs.read(reinterpret_cast<char*>(&qq), sizeof(unsigned char)); // 10
+}
+
+std::vector<rFileOther::ResInsanity> rFileOther::HdrInsanity::doInHdr(std::ifstream& ifs)
+{
+	std::vector<ResInsanity> rs;
+	rs.reserve(fileNumber);
+	for (int i = 0; i < fileNumber; ++i)
+		rs.emplace_back(ResInsanity(ifs));
+
+	unsigned char cont = 0;
+	ifs.read(reinterpret_cast<char*>(&cont), sizeof(unsigned char));
+	if (cont == 8 || cont == 9)
+	{
+		k525 = 121;
+		k526 = 1;
+	}
+	if (cont == 6)
+	{
+		k525 = 121;
+		k526 = 0; // byteptr
+		[[maybe_unused]] unsigned char k527 = 1;
+	}
+	else if (cont == 7)
+	{
+		k525 = 121;
+		k526 = 1;
+		[[maybe_unused]] unsigned char k527 = 1;
+	}
+	else if (cont == 1)
+	{
+		k526 = true;
+	}
+
+	[[maybe_unused]] unsigned long anotherone = 0;
+	ifs.read(reinterpret_cast<char*>(&cont), sizeof(unsigned char));
+	// 52c + 55c (file)
+	// to func
+	return rs;
+}
+
+rFileOther::ResInsanity::ResInsanity(std::ifstream& ifs) : fileNameLen(0), size(0), time(0), offset(0)
+{
+	ifs.read(reinterpret_cast<char*>(&fileNameLen), sizeof(unsigned short));
+	fileName.resize(fileNameLen);
+	ifs.read(&fileName[0], static_cast<std::streamsize>(fileNameLen * sizeof(char)));
+	ifs.read(reinterpret_cast<char*>(&size), sizeof(unsigned long));
+	ifs.read(reinterpret_cast<char*>(&time), sizeof(unsigned long));
+	ifs.read(reinterpret_cast<char*>(&offset), sizeof(unsigned long));
+}
+

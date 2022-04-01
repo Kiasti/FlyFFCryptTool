@@ -71,3 +71,13 @@ bool res::find::FindFile::operator()(const vp_NewFeiFei& df) const
 			return hashId == rhs.uid;
 		});
 }
+
+
+
+bool res::find::findEntropia::operator()(const vp_Forsaken& df) const
+{
+	return std::ranges::any_of(df.second.begin(), df.second.end(), [this](const file::other::ResForsaken& rhs) -> bool {
+		return name == rhs.fileName;
+		});
+
+}

@@ -7,6 +7,52 @@
 #include "Cryptopp/Include/hex.h"
 #include "Cryptopp/Include/base64.h"
 
+std::string cryptEngine::getSha256(const std::string& str, const std::string& salt, saltPos&& pos, shaEncode&& shaEn)
+{
+	std::string temp;
+	if (!salt.empty())
+	{
+		switch (pos)
+		{
+			case saltPos::beg: temp = salt + str; break;
+			case saltPos::end: temp = str + salt; break;
+		}
+	}
+	else
+		temp = str;
+
+
+	std::string digest;
+	CryptoPP::SHA256 hash;
+	switch (shaEn)
+	{
+		case shaEncode::hexLowerCase:
+		{
+			CryptoPP::StringSource foo(temp, true, new CryptoPP::HashFilter(hash, new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
+			std::ranges::transform(digest, digest.begin(), [](const unsigned char c) { return std::tolower(c); });
+			break;
+		}
+		case shaEncode::hexUpperCase:
+		{
+			CryptoPP::StringSource foo(temp, true, new CryptoPP::HashFilter(hash, new CryptoPP::HexEncoder(new CryptoPP::StringSink(digest))));
+			break;
+		}
+		case shaEncode::def:
+		{
+			hash.Update(reinterpret_cast<const unsigned char*>(temp.data()), temp.size());
+			digest.resize(hash.DigestSize());
+			hash.Final(reinterpret_cast<unsigned char*>(&digest[0]));
+			break;
+		}
+		case shaEncode::base64:
+		{
+			CryptoPP::StringSource foo(temp, true, new CryptoPP::HashFilter(hash, new CryptoPP::Base64Encoder(new CryptoPP::StringSink(digest))));
+			break;
+		}
+	}
+	return digest;
+}
+
 std::string cryptEngine::getSha256(const std::string& str, std::string&& salt, saltPos&& pos, shaEncode&& shaEn)
 {
 	std::string temp;

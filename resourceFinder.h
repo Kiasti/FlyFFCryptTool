@@ -18,6 +18,15 @@ namespace res::find
 		bool operator()(const vp_Cloud& df) const;
 		template<typename b> bool operator()(const b&) const { return false; }
 	};
+
+	struct findEntropia
+	{
+		mutable std::string name;
+		explicit findEntropia(std::string n) : name(std::move(n)) {}
+
+		bool operator()(const vp_Forsaken& df) const;
+		template<typename b> bool operator()(const b&) const { return false; }
+	};
 }
 
 namespace rFind = res::find;
