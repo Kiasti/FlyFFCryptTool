@@ -188,7 +188,16 @@ std::string res::mLoad::load::operator()(const vp_AesAzure& df) const
 { 
 	unsigned long long crc = 0;
 	if (!fileName.empty())
+	{
+		std::ranges::transform(fileName, fileName.begin(), [](const unsigned char c) { return std::tolower(c); });
 		crc = cryptEngine::wbqt::CRC64::Compute(reinterpret_cast<const unsigned char*>(&fileName[0]), fileName.length());
+
+		if (fileName == "model\\sfx_waterfall01.sfx")
+		{
+			std::cout << "wews" << fileName << std::endl;
+			return "";
+		}
+	}
 
 	if (std::ifstream readingFile(archiveName, std::ios::in | std::ios::binary); readingFile.good())
 	{
@@ -196,9 +205,10 @@ std::string res::mLoad::load::operator()(const vp_AesAzure& df) const
 		{
 			if (crc == df.second[i].crc)
 			{
+#define UNENCRYPTED_BYTES (sizeof(short) + sizeof(short) + sizeof(bool) + sizeof(int))
 				if (df.first.bEncryption)
 				{
-					const unsigned long nReadCount = (df.second[i].offset - sizeof(int) - sizeof(bool)) % 16;
+					const unsigned long nReadCount = (df.second[i].offset - UNENCRYPTED_BYTES) % 16;
 					const size_t nEncSize = (df.second[i].size + nReadCount + 15) & ~15;
 
 					std::string blockBuffer(nEncSize, '\0');
@@ -211,20 +221,22 @@ std::string res::mLoad::load::operator()(const vp_AesAzure& df) const
 						static_cast<unsigned long>(nEncSize / 16ull), AES::BlockMode::ECB);
 
 					encryptedBuffer.resize(0);
-					if (static_cast<size_t>(nReadCount) + static_cast<size_t>(df.second[i].size) <= blockBuffer.size())
-						return blockBuffer;
-				}
-				else
-				{
-					std::string tempString;
-					tempString.resize(df.second[i].size);
+					std::string finalBuff(df.second[i].size, '\0');
 
-					readingFile.read(&tempString[0], df.second[i].size);
-					readingFile.close();
+					memcpy(&finalBuff[0], &blockBuffer[0] + nReadCount, df.second[i].size);
+					return finalBuff;
 
-					file::other::HdrAesAzure::rotr(reinterpret_cast<unsigned char*>(&tempString[0]), df.second[i].size);
-					return tempString;
 				}
+				std::string tempString;
+				tempString.resize(df.second[i].size);
+
+				readingFile.seekg(df.second[i].offset, std::ios::beg);
+				readingFile.read(&tempString[0], df.second[i].size);
+				readingFile.close();
+
+				file::other::HdrAesAzure::rotr(reinterpret_cast<unsigned char*>(&tempString[0]), df.second[i].size);
+				return tempString;
+				
 			}
 		}
 		readingFile.close();

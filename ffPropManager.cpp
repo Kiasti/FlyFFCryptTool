@@ -35,7 +35,7 @@ void res::props::propData::loadStrings() const
 	if (rmm == nullptr)
 		return;
 
-	for (const auto* file : defaultTxt)
+	for (const auto* file : defaultTxtDefs)
 	{
 		if (const auto [fst, snd] = rmm->findFile(file); snd)
 		{
@@ -103,11 +103,198 @@ void res::props::propData::loadMainFiles()
 			cs.Load(std::visit(mLoad::load{ found.first->first, "terrain.inc" }, found.first->second));
 			loadTerrain(std::move(cs));
 		}
-
+		found = rmm->findFile("resdata.inc");
+		if (found.second)
+		{
+			ffParser::text::CScript cs;
+			cs.Load(std::visit(mLoad::load{ found.first->first, "resdata.inc" }, found.first->second));
+			loadApplet(std::move(cs));
+		}
+		found = rmm->findFile("propskill.txt");
+		if (found.second)
+		{
+			ffParser::text::CScript cs;
+			cs.Load(std::visit(mLoad::load{ found.first->first, "propskill.txt" }, found.first->second));
+			loadPropSkill(std::move(cs));
+		}
 
 		loadWorldInsides();
 	}
 }
+
+
+void res::props::propData::loadPropSkill(ffTextParser::CScript&& scanner, propVer&& ipv)
+{
+	ItemProp prop;
+	int nVer = scanner.GetNumber();
+
+	while (scanner.tok != ffTextParser::FINISHED)
+	{
+		unsigned long dwID = scanner.GetNumber();
+		prop.nVer = nVer;
+		prop.dwID = dwID;
+		scanner.GetToken();
+
+		strcpy(prop.szName, scanner.token);
+
+		prop.dwNum = scanner.GetNumber();
+		prop.dwPackMax = scanner.GetNumber();
+		prop.dwItemKind1 = scanner.GetNumber();
+		prop.dwItemKind2 = scanner.GetNumber();
+		prop.dwItemKind3 = scanner.GetNumber();
+		prop.dwItemJob = scanner.GetNumber();
+		prop.bPermanence = scanner.GetNumber();
+		prop.dwUseable = scanner.GetNumber();
+		prop.dwItemSex = scanner.GetNumber();
+		prop.dwCost = scanner.GetNumber();
+		prop.dwEndurance = scanner.GetNumber();
+		prop.nAbrasion = scanner.GetNumber();
+		prop.nMaxRepair = scanner.GetNumber();
+		prop.dwHanded = scanner.GetNumber();
+		prop.dwFlag = scanner.GetNumber();
+		prop.dwParts = scanner.GetNumber();
+		prop.dwPartsub = scanner.GetNumber();
+		prop.bPartsFile = scanner.GetNumber();
+		prop.dwExclusive = scanner.GetNumber();
+		prop.dwBasePartsIgnore = scanner.GetNumber();
+		prop.dwItemLV = scanner.GetNumber();
+		prop.dwItemRare = scanner.GetNumber();
+		prop.dwShopAble = scanner.GetNumber();
+		prop.nLog = scanner.GetNumber();
+		prop.bCharged = scanner.GetNumber();
+		prop.bCharged = (prop.bCharged != 1 ? 0 : 1);
+		prop.dwLinkKindBullet = scanner.GetNumber();
+		prop.dwLinkKind = scanner.GetNumber();
+		prop.dwAbilityMin = scanner.GetNumber();
+
+		prop.dwAbilityMax = scanner.GetNumber();
+		prop.eItemType = scanner.GetNumber();
+		prop.wItemEatk = static_cast<short>(scanner.GetNumber());
+		prop.dwParry = scanner.GetNumber();
+		prop.dwblockRating = scanner.GetNumber();
+		prop.nAddSkillMin = scanner.GetNumber();
+		prop.nAddSkillMax = scanner.GetNumber();
+		prop.dwAtkStyle = scanner.GetNumber();
+		prop.dwWeaponType = scanner.GetNumber();
+		prop.dwItemAtkOrder1 = scanner.GetNumber();
+		prop.dwItemAtkOrder2 = scanner.GetNumber();
+		prop.dwItemAtkOrder3 = scanner.GetNumber();
+		prop.dwItemAtkOrder4 = scanner.GetNumber();
+		prop.tmContinuousPain = scanner.GetNumber();
+		prop.nShellQuantity = scanner.GetNumber();
+		prop.dwRecoil = scanner.GetNumber();
+		prop.dwLoadingTime = scanner.GetNumber();
+		prop.nAdjHitRate = scanner.GetNumber();
+		prop.fAttackSpeed = scanner.GetFloat();
+		prop.dwDmgShift = scanner.GetNumber();
+		prop.dwAttackRange = scanner.GetNumber();
+		prop.nProbability = scanner.GetNumber();
+		prop.dwDestParam[0] = scanner.GetNumber();
+		prop.dwDestParam[1] = scanner.GetNumber();
+		prop.dwDestParam[2] = scanner.GetNumber();
+		prop.nAdjParamVal[0] = scanner.GetNumber();
+		prop.nAdjParamVal[1] = scanner.GetNumber();
+		prop.nAdjParamVal[2] = scanner.GetNumber();
+		prop.dwChgParamVal[0] = scanner.GetNumber();
+		prop.dwChgParamVal[1] = scanner.GetNumber();
+		prop.dwChgParamVal[2] = scanner.GetNumber();
+		prop.nDestData1[0] = scanner.GetNumber();
+		prop.nDestData1[1] = scanner.GetNumber();
+		prop.nDestData1[2] = scanner.GetNumber();
+		prop.dwActiveSkill = scanner.GetNumber();
+		prop.dwActiveSkillLv = scanner.GetNumber();
+		prop.dwActiveSkillRate = scanner.GetNumber();
+		prop.dwReqMp = scanner.GetNumber();
+		prop.dwReqFp = scanner.GetNumber();
+		prop.dwReqDisLV = scanner.GetNumber();
+		prop.dwReSkill1 = scanner.GetNumber();
+		prop.dwReSkillLevel1 = scanner.GetNumber();
+		prop.dwReSkill2 = scanner.GetNumber();
+		prop.dwReSkillLevel2 = scanner.GetNumber();
+		prop.dwSkillReadyType = scanner.GetNumber();
+		prop.dwSkillReady = scanner.GetNumber();
+		prop._dwSkillRange = scanner.GetNumber();
+		prop.dwSfxElemental = scanner.GetNumber();
+		prop.dwSfxObj = scanner.GetNumber();
+		prop.dwSfxObj2 = scanner.GetNumber();
+		prop.dwSfxObj3 = scanner.GetNumber();
+		prop.dwSfxObj4 = scanner.GetNumber();
+		prop.dwSfxObj5 = scanner.GetNumber();
+		prop.dwUseMotion = scanner.GetNumber();
+		prop.dwCircleTime = scanner.GetNumber();
+		prop.dwSkillTime = scanner.GetNumber();
+		prop.dwExeTarget = scanner.GetNumber();
+		prop.dwUseChance = scanner.GetNumber();
+		prop.dwSpellRegion = scanner.GetNumber();
+		prop.dwSpellType = scanner.GetNumber();
+		prop.dwReferStat1 = scanner.GetNumber();
+		prop.dwReferStat2 = scanner.GetNumber();
+		prop.dwReferTarget1 = scanner.GetNumber();
+		prop.dwReferTarget2 = scanner.GetNumber();
+		prop.dwReferValue1 = scanner.GetNumber();
+		prop.dwReferValue2 = scanner.GetNumber();
+		prop.dwSkillType = scanner.GetNumber();
+		prop.nItemResistElecricity = static_cast<int>(scanner.GetFloat() * 100.0f);
+		prop.nItemResistFire = static_cast<int>(scanner.GetFloat() * 100.0f);
+		prop.nItemResistWind = static_cast<int>(scanner.GetFloat() * 100.0f);
+		prop.nItemResistWater = static_cast<int>(scanner.GetFloat() * 100.0f);
+		prop.nItemResistEarth = static_cast<int>(scanner.GetFloat() * 100.0f);
+		prop.nEvildoing = scanner.GetNumber();
+		prop.dwExpertLV = scanner.GetNumber();
+		prop.dwExpertMax = scanner.GetNumber();
+		prop.dwSubDefine = scanner.GetNumber();
+		prop.dwExp = scanner.GetNumber();
+		prop.dwComboStyle = scanner.GetNumber();
+		prop.fFlightSpeed = scanner.GetFloat();
+		prop.fFlightLRAngle = scanner.GetFloat();
+		prop.fFlightTBAngle = scanner.GetFloat();
+		prop.dwFlightLimit = scanner.GetNumber();
+		prop.dwFFuelReMax = scanner.GetNumber();
+		prop.dwAFuelReMax = scanner.GetNumber();
+		prop.dwFuelRe = scanner.GetNumber();
+		prop.dwLimitLevel1 = scanner.GetNumber();
+		prop.nReflect = scanner.GetNumber();
+		prop.dwSndAttack1 = scanner.GetNumber();
+		prop.dwSndAttack2 = scanner.GetNumber();
+
+
+		scanner.GetToken();
+		scanner.GetToken();
+		strncpy(prop.szIcon, scanner.token, sizeof(prop.szIcon) - 1);
+		prop.szCommand[sizeof(prop.szIcon) - 1] = 0;
+
+		scanner.GetToken();
+
+		prop.dwQuestId = scanner.GetNumber();
+
+		scanner.GetToken();
+		scanner.GetToken();
+		strcpy(prop.szTextFileName, scanner.token);
+		scanner.GetToken();
+
+		scanner.GetToken();
+		strncpy(prop.szCommand, scanner.token, sizeof(prop.szCommand) - 1);
+		prop.szCommand[sizeof(prop.szCommand) - 1] = 0;
+
+		if (ipv >= propVer::ver16)
+		{
+			prop.dwBuffTickType = scanner.GetNumber();
+
+			if (ipv >= propVer::ver19)
+			{
+				prop.dwMonsterGrade = scanner.GetNumber();
+				prop.dwEquipItemKeepSkill = scanner.GetNumber();
+				prop.bCanUseActionSlot = scanner.GetNumber();
+			}
+		}
+
+		skillProp.insert(std::make_pair(prop.dwID, prop));
+
+		nVer = scanner.GetNumber();	// version;
+	}
+}
+
+
 
 
 void res::props::propData::loadPropItem(ffTextParser::CScript&& scanner, propVer&& ipv)
@@ -180,14 +367,12 @@ void res::props::propData::loadPropItem(ffTextParser::CScript&& scanner, propVer
 		prop.dwDestParam[0] = scanner.GetNumber();
 		prop.dwDestParam[1] = scanner.GetNumber();
 		prop.dwDestParam[2] = scanner.GetNumber();
-		//19
 		if (ipv >= propVer::ver19)
 		{
 			prop.dwDestParam[3] = scanner.GetNumber();
 			prop.dwDestParam[4] = scanner.GetNumber();
 			prop.dwDestParam[5] = scanner.GetNumber();
 		}
-
 		prop.nAdjParamVal[0] = scanner.GetNumber();
 		prop.nAdjParamVal[1] = scanner.GetNumber();
 		prop.nAdjParamVal[2] = scanner.GetNumber();
@@ -198,7 +383,6 @@ void res::props::propData::loadPropItem(ffTextParser::CScript&& scanner, propVer
 			prop.nAdjParamVal[5] = scanner.GetNumber();
 		}
 
-		//19
 		prop.dwChgParamVal[0] = scanner.GetNumber();
 		prop.dwChgParamVal[1] = scanner.GetNumber();
 		prop.dwChgParamVal[2] = scanner.GetNumber();
@@ -208,12 +392,15 @@ void res::props::propData::loadPropItem(ffTextParser::CScript&& scanner, propVer
 			prop.dwChgParamVal[4] = scanner.GetNumber();
 			prop.dwChgParamVal[5] = scanner.GetNumber();
 		}
-
-		//19
 		prop.nDestData1[0] = scanner.GetNumber();
 		prop.nDestData1[1] = scanner.GetNumber();
 		prop.nDestData1[2] = scanner.GetNumber();
-		//19
+		if (ipv >= propVer::ver19)
+		{
+			prop.nDestData1[3] = scanner.GetNumber();
+			prop.nDestData1[4] = scanner.GetNumber();
+			prop.nDestData1[5] = scanner.GetNumber();
+		}
 
 		prop.dwActiveSkill = scanner.GetNumber();
 		prop.dwActiveSkillLv = scanner.GetNumber();
@@ -320,6 +507,18 @@ void res::props::propData::loadPropItem(ffTextParser::CScript&& scanner, propVer
 			prop.dwPierce = scanner.GetNumber();	//Cannot upgrade items that last only X long
 			prop.dwUprouse = scanner.GetNumber();	//Cannot upgrade items that last only X long
 			prop.bAbsoluteTime = scanner.GetNumber();	//if 1 = Time counts down while offline.
+			if (ipv >= propVer::ver19)
+			{
+
+				prop.dwItemGrade = scanner.GetNumber();
+				prop.bCanTrade = scanner.GetNumber();
+				prop.dwMainCategory = scanner.GetNumber();
+				prop.dwSubCategory = scanner.GetNumber();
+				prop.bCanHaveServerTransform = scanner.GetNumber();
+				prop.bCanSavePotion = scanner.GetNumber();
+				prop.bCanLooksChange = scanner.GetNumber();
+				prop.blsLooksChangeMaterial = scanner.GetNumber();
+			}
 		}
 		itemProp.insert(std::make_pair(prop.dwID, prop));
 
@@ -925,7 +1124,6 @@ void res::props::propData::loadApplet(ffTextParser::CScript&& scanner, propVer&&
 			pWndCtrl.m_bDisabled = scanner.GetNumber();
 			pWndCtrl.m_bTabStop = scanner.GetNumber();
 
-			//propver
 			if (ipv >= propVer::ver16)
 			{
 				scanner.GetNumber();
@@ -1131,21 +1329,16 @@ std::set<std::string> ffProps::propData::genMdlTexFileNames(const std::set<std::
 
 				std::set<std::string> results;
 				if (extString == ".o3d")
-				{
 					results = seekTextureObj(strstrm, isPackedInOne);
-					innerList.insert(results.begin(), results.end());
-				}
 				else if (extString == ".sfx")
-				{
-					results = scanSfxFiles(strstrm);
-					innerList.insert(results.begin(), results.end());
-				}
+					results = scanSfxFiles(strstrm, isPackedInOne);
+				innerList.insert(results.begin(), results.end());
 			}
 		}
+#ifdef _DBGSTRINGS
 		else
-		{
 			std::cout << "The file: " << str << " doesnt exist" << std::endl;
-		}
+#endif
 	}
 	return innerList;
 }
@@ -1160,7 +1353,7 @@ std::set<std::string> ffProps::propData::genModelFileNames() const
 		for (const auto& val : mdlMng.m_aaModelElem[i])
 		{
 			std::string wew = isPackedInOne ? i == OT_SFX ? paths::sfx : paths::model : "";
-			if (!val.m_szPart.empty())
+			if (!val.m_szPart.empty() && i == OT_ITEM)
 			{
 				wew += "part_";
 				if (const auto pos = val.m_szPart.find('/'); pos != std::string::npos)
@@ -1168,33 +1361,76 @@ std::set<std::string> ffProps::propData::genModelFileNames() const
 					std::string innerStr = wew;
 					innerStr += val.m_szPart.substr(0, pos) + ".o3d";
 					wew += val.m_szPart.substr(pos + 1) + ".o3d";
-					vs[i].insert(std::move(innerStr));
-					vs[i].insert(std::move(wew));
+					vs[i].insert(innerStr);
+					vs[i].insert(wew);
+
+					if (const auto [fst, snd] = rmm->findFile(wew + ".chr"); snd)
+					{
+						for (const auto& motionIter : val.m_apszMotion)
+						{
+							std::string tmp = wew;
+							tmp += "_";
+							tmp += motionIter;
+
+							vs[i].insert(tmp + ".ani");
+							tmp = innerStr;
+							tmp += "_";
+							tmp += motionIter;
+							vs[i].insert(tmp + ".ani");
+						}
+						vs[i].insert(wew + ".chr");
+					}
+				}
+				else
+				{
+					wew += val.m_szPart;
+					wew += ".o3d";
+					vs[i].insert(wew);
+
+					if (const auto [fst, snd] = rmm->findFile(wew + ".chr"); snd)
+					{
+						for (const auto& motionIter : val.m_apszMotion)
+						{
+							std::string tmp = wew;
+							tmp += "_";
+							tmp += motionIter;
+
+							vs[i].insert(tmp + ".ani");
+						}
+						vs[i].insert(wew + ".chr");
+					}
 				}
 			}
 			else
 			{
 				std::string cpy = wew;
-				wew += std::string(g_szRoot[i]) + "_";
-				if (val.m_dwModelType == MODELTYPE_SFX || OT_SFX == i)
+				if (val.m_dwModelType == MODELTYPE_SFX)
 				{
-					cpy += "sfx_";
-					cpy += val.m_szName; // sfx_obj
-					wew += val.m_szName; // obj_obj
-					// sfx.sfx as well?
-					std::string temp2 = val.m_szName + ".sfx"; // todo: tolower on load rather than this
+					if (val.m_szName.substr(0, 4) == "sfx_" || (val.m_szName.substr(0, 4) == "obj_" && i == OT_OBJ))
+					{
+						cpy = val.m_szName + ".sfx";
+						if (const auto [fst, snd] = rmm->findFile(wew); snd)
+							vs[i].insert(wew);
+					}
+					else
+					{
+						cpy += val.m_szName + ".sfx";
+						if (i == OT_SFX)
+							wew += "sfx_";
+						else
+							wew += "obj_";
 
-					wew += ".sfx";
-					cpy += ".sfx";
-					if (auto fileFind = rmm->findFile(wew); fileFind.second)
-						vs[i].insert(wew);
-					else if (fileFind = rmm->findFile(cpy); fileFind.second)
-						vs[i].insert(cpy);
-					else if (fileFind = rmm->findFile(temp2); fileFind.second)
-						vs[i].insert(temp2);
+						wew += val.m_szName + ".sfx";
+						if (auto ret = rmm->findFile(wew); ret.second)
+							vs[i].insert(wew);
+						else if (ret = rmm->findFile(cpy); ret.second)
+							vs[i].insert(cpy);
+					}
 				}
 				else
 				{
+					wew += g_szRoot[i];
+					wew += "_";
 					wew += val.m_szName;
 
 					if (i == OT_MOVER || i == OT_ITEM || i == OT_CTRL)
@@ -1263,14 +1499,15 @@ std::set<std::string> ffProps::propData::genWorldFileNames()
 				std::string wewStr = tempString;
 				if (j < 10)
 					wewStr += "0";
-				wewStr += std::to_string(i);
+
+				wewStr += std::to_string(j);
+				wewStr += "-";
 				if (i < 10)
 					wewStr += "0";
-				wewStr += "-";
-				wewStr += std::to_string(j);
+
+				wewStr += std::to_string(i);
 				temps.insert(wewStr + ".lnd");
 				temps.insert(wewStr + ".dds");
-
 			}
 		}
 	}
@@ -1306,7 +1543,10 @@ std::set<std::string> ffProps::propData::generateFileList()
 
 	}
 	for (const auto& val : itemProp | std::views::values)
-		fileList.insert(isPackedInOne ? std::string(paths::item) + val.szIcon : val.szIcon);	
+		fileList.insert(isPackedInOne ? std::string(paths::icon) + val.szIcon : val.szIcon);	
+	for (const auto& val : skillProp | std::views::values)
+		fileList.insert(isPackedInOne ? std::string(paths::icon) + val.szIcon : val.szIcon);
+
 	for (const auto& val : m_mapCharacter | std::views::values)
 		fileList.insert(isPackedInOne ? paths::character + std::string(val.m_szChar) : val.m_szChar);
 
@@ -1315,13 +1555,49 @@ std::set<std::string> ffProps::propData::generateFileList()
 		fileList.insert(isPackedInOne ? paths::theme_default + val.strTexture : val.strTexture);
 		fileList.insert(isPackedInOne ? paths::theme_english + val.strTexture : val.strTexture);
 		fileList.insert(isPackedInOne ? paths::theme_german + val.strTexture : val.strTexture);
+		fileList.insert(isPackedInOne ? paths::theme_french + val.strTexture : val.strTexture);
 
 		for (const auto& innerVal : val.ptrCtrlArray)
 		{
 			fileList.insert(isPackedInOne ? paths::theme_default + innerVal.strTexture : innerVal.strTexture);
 			fileList.insert(isPackedInOne ? paths::theme_english + innerVal.strTexture : innerVal.strTexture);
 			fileList.insert(isPackedInOne ? paths::theme_german + innerVal.strTexture : innerVal.strTexture);
+			fileList.insert(isPackedInOne ? paths::theme_french + innerVal.strTexture : innerVal.strTexture);
+
 		}
 	}
+	for (auto& defaultDefine : defaultDefines)
+		fileList.insert(defaultDefine);
+	for (auto& i : defaultTxt)
+		fileList.insert(i);
+	for (auto& i : defaultCSV)
+		fileList.insert(i);
+	for (auto& i : defaultInc)
+		fileList.insert(i);
+	for (auto& i : defaultTxtDefs)
+		fileList.insert(i);
+
+	//level flyff
+	for (auto& i : levelFlyffFile::mainResource)
+		fileList.insert(i);
+	for (auto& i : levelFlyffFile::mainResourceTxt)
+		fileList.insert(i);
+	for (auto& i : levelFlyffFile::mainResourceDefines)
+		fileList.insert(i);
+	for (auto& i : wndtiles)
+		fileList.insert(isPackedInOne ? std::string(paths::theme_default) + i : i);
+	for (auto& i : levelFlyffFile::iconResource)
+		fileList.insert(isPackedInOne ? std::string(paths::icon) + i : i);
+	for (auto& i : levelFlyffFile::themeResource)
+		fileList.insert(isPackedInOne ? std::string(paths::theme_default) + i : i);
+	for (auto& i : levelFlyffFile::weatherResource)
+		fileList.insert(isPackedInOne ? std::string(paths::weather) + i : i);
+	for (auto& i : levelFlyffFile::themeResTexinc)
+		fileList.insert(isPackedInOne ? std::string(paths::theme_default) + i : i);
+	for (auto& i : levelFlyffFile::iconTexInc)
+		fileList.insert(isPackedInOne ? std::string(paths::icon) + i : i);
+	for (auto& i : levelFlyffFile::clientResource)
+		fileList.insert(isPackedInOne ? std::string(paths::client) + i : i);
+
 	return fileList;
 }

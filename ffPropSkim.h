@@ -6,7 +6,7 @@
 
 namespace res::props
 {
-	static std::set<std::string> skimGmObjectForTextures(std::istringstream& ifs, const unsigned int type, const int folderType = 0)
+	std::set<std::string> skimGmObjectForTextures(std::istringstream& ifs, const unsigned int type, const int folderType = 0)
 	{
 		std::set<std::string> textureList;
 
@@ -79,17 +79,22 @@ namespace res::props
 		return textureList;
 	}
 
-	static std::set<std::string> seekTextureObj(std::istringstream& ifs, const int folderType = 0)
+	std::set<std::string> seekTextureObj(std::istringstream& ifs, const int folderType = 0)
 	{
 		std::set<std::string> strList{};
 		if (!ifs.good())
 			return strList;
 
-		char cLen;
-		int nVer = 0;
-		ifs.read(&cLen, sizeof(char));
-		ifs.seekg(cLen, std::ios::cur);
-		ifs.read(reinterpret_cast<char*>(&nVer), sizeof(int));
+		unsigned char cLen = 0;
+		unsigned int nVer = 0;
+		ifs.read(reinterpret_cast<char*>(&cLen), sizeof(unsigned char));
+		if (cLen >= 64)
+			return strList;
+
+		std::string buffs(cLen, '\0');
+		ifs.read(&buffs[0], cLen);
+
+		ifs.read(reinterpret_cast<char*>(&nVer), sizeof(unsigned int));
 
 		if (nVer < 20)
 			return strList;
@@ -134,6 +139,10 @@ namespace res::props
 				{
 					int	nLen = 0;
 					ifs.read(reinterpret_cast<char*>(&nLen), sizeof(int));
+					if (nLen > 32)
+					{
+						return strList;
+					}
 					ifs.seekg(static_cast<long long>((sizeof(char) * nLen) + (sizeof(types::matrix<float>) * 2) + sizeof(int)), std::ios::cur);
 				}
 				ifs.seekg(sizeof(int), std::ios::cur); //ani count
@@ -195,7 +204,7 @@ namespace res::props
 	}
 
 	// todo: if it is packed in one, add the folder information beforehand. (isPackedInOne)
-	static std::set<std::string> scanPartSfx(std::istringstream& ifs, const SFXPARTTYPE sfxpt, const SFXLOADVER ver = SFXLOADVER::load1, const bool isPackedInOne = false)
+	std::set<std::string> scanPartSfx(std::istringstream& ifs, const SFXPARTTYPE sfxpt, const SFXLOADVER ver = SFXLOADVER::load1, const bool isPackedInOne = false)
 	{
 		std::set<std::string> textureNames{};
 		std::string strTemp;
@@ -242,11 +251,17 @@ namespace res::props
 						substr += std::to_string(i);
 
 					substr += ext;
-					textureNames.insert(substr);
+					textureNames.insert(isPackedInOne ? paths::sfx_Texture_Hi + substr : substr);
+					textureNames.insert(isPackedInOne ? paths::sfx_Texture_Mid + substr : substr);
+					textureNames.insert(isPackedInOne ? paths::sfx_Texture_Low + substr : substr);
 				}
 			}
 			else
-				textureNames.insert(strTemp);
+			{
+				textureNames.insert(isPackedInOne ? paths::sfx_Texture_Hi + strTemp : strTemp);
+				textureNames.insert(isPackedInOne ? paths::sfx_Texture_Mid + strTemp : strTemp);
+				textureNames.insert(isPackedInOne ? paths::sfx_Texture_Low + strTemp : strTemp);
+			}
 		}
 
 
@@ -281,7 +296,7 @@ namespace res::props
 	}
 
 
-	static std::set<std::string> scanSfxFiles(std::istringstream& ifs, bool isPackedInOne = false)
+	std::set<std::string> scanSfxFiles(std::istringstream& ifs, const bool isPackedInOne = false)
 	{
 		if (!ifs.good())
 			return {};

@@ -52,36 +52,7 @@ std::mutex tempMutex;
 //bool ffTextParser::CScanner::Load(const char* lpszFileName, bool bMultiByte)
 bool ffTextParser::CScanner::Load(std::string&& inString)
 {
-	//fileInMem = origin::arcLoader::openOf(std::move(origin::arcLoader::getHeaderData(lpszFileName)));
 	fileInMem = inString;
-	//if (fileInMem.empty())
-	//{
-	//	{
-	//		std::scoped_lock<std::mutex> lck(tempMutex);
-	//		std::ofstream oof("ThreadErrorScanner.txt", std::ios::app);
-	//		oof << "file not found: " << lpszFileName << "\n";
-	//		oof.close();
-	//	}
-	//	return false;
-	//}
-
-	/*if (fileInMem.size() >= 2)
-	{
-		if (fileInMem[0] == -1 && fileInMem[1] == -2)
-		{
-			std::string temp;
-			temp.reserve(fileInMem.size());
-
-			for (int i = 2; i < fileInMem.size(); ++i)
-			{
-				if (i % 2 == 0)
-					temp += fileInMem[i];
-			}
-
-			fileInMem = temp;
-			temp.clear();
-		}
-	}*/
 
 	if (fileInMem.size() >= 2)
 	{
@@ -449,7 +420,9 @@ int ffTextParser::CScanner::GetNumber(const bool bComma )
 		try  { return static_cast<int>(std::stoul(Token)); }
 		catch (const std::exception &e)
 		{
+#ifdef _DBGSTRINGS
 			std::cout << Token << std::endl;
+#endif
 			return 0;
 		}
 	}
@@ -814,7 +787,7 @@ void ffTextParser::CScript::scanStringFiles()
 	}
 
 	{
-		const std::shared_lock<std::shared_mutex> lock(stringListMutex);
+		const std::shared_lock lock(stringListMutex);
 		m_mapString.insert(temp.begin(), temp.end());
 	}
 }

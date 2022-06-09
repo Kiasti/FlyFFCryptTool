@@ -71,7 +71,6 @@ rfile::flyff::Res::Res(const other::HdrAesGOW& hdr, std::streampos& currentPos) 
 }
 
 
-
 rfile::other::HdrInsignia::HdrInsignia(std::ifstream& ifs) : hdrSize(0), fileType(11), byEncryptionKey(0xC4), fileNumber(0)
 {
 	ifs.seekg(-60, std::ios::end);
@@ -210,6 +209,68 @@ void rfile::other::HdrAesAzure::rotl(unsigned char* data, const size_t size)
 	for (size_t i = 0; i < size; ++i)
 		data[i] = static_cast<unsigned char>(data[i] << len | data[i] >> (-len & mask));
 }
+
+
+//lykan zzz
+
+rfile::other::HdrLykan::HdrLykan(std::ifstream& ifs) : firstCrc(0), fileVersion(0), bEncryption(false), headerSize(0), fileNumber(0)
+{
+	ifs.read(reinterpret_cast<char*>(&firstCrc), sizeof(unsigned short));
+	ifs.read(reinterpret_cast<char*>(&fileVersion), sizeof(short));
+	ifs.read(reinterpret_cast<char*>(&bEncryption), sizeof(bool));
+	ifs.read(reinterpret_cast<char*>(&headerSize), sizeof(int));
+	if (bEncryption)
+	{
+		const int nBlockHeaderSize = headerSize + (headerSize & 0x0F);
+		headerStr.resize(headerSize);
+
+		std::string cryptHdr;
+		cryptHdr.resize(nBlockHeaderSize);
+
+		ifs.read(&cryptHdr[0], nBlockHeaderSize);
+		cryptEngine::defAes::m_crypt.Decrypt(reinterpret_cast<const unsigned char*>(&cryptHdr[0]), reinterpret_cast<unsigned char*>(&headerStr[0]), nBlockHeaderSize >> 4, AES::BlockMode::ECB);
+	}
+	else
+	{
+		headerStr.resize(headerSize, 0);
+		ifs.read(&headerStr[0], headerSize);
+		rotr(reinterpret_cast<unsigned char*>(&headerStr[0]), headerSize);
+	}
+
+	if (const unsigned short crc = cryptEngine::flyff::crc16(reinterpret_cast<unsigned char*>(&headerStr[0]), headerSize); crc != firstCrc)
+		std::cout << "crc not matching" << std::endl;
+	fileNumber = headerSize / sizeof(ResLykan);
+}
+
+void rfile::other::HdrLykan::rotr(unsigned char* data, const size_t size)
+{
+	constexpr unsigned int mask = (8 * sizeof(unsigned char) - 1);
+	constexpr int len = 1;
+
+	for (size_t i = 0; i < size; ++i)
+		data[i] = static_cast<unsigned char>(data[i] >> len | data[i] << (-len & mask));
+}
+
+void rfile::other::HdrLykan::rotl(unsigned char* data, const size_t size)
+{
+	constexpr unsigned int mask = (8 * sizeof(unsigned char) - 1);
+	constexpr int len = 1;
+
+	for (size_t i = 0; i < size; ++i)
+		data[i] = static_cast<unsigned char>(data[i] << len | data[i] >> (-len & mask));
+}
+
+
+rfile::other::ResLykan::ResLykan(const HdrLykan& hdr, std::streampos& currentPos) : dwOffset(0), dwFileSize(0), byEncryptionKey(0), bEncryption(false)
+{
+	memcpy(this, &hdr.headerStr[currentPos], sizeof(ResLykan));
+	currentPos += sizeof(ResLykan);
+}
+
+
+
+
+
 
 
 

@@ -137,6 +137,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <AdditionalIncludeDirectories>./zlib/;./crpytopp/;./nana/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -181,7 +182,9 @@
     <ClInclude Include="ffProps.h" />
     <ClInclude Include="ffPropSkim.h" />
     <ClInclude Include="fileSys.h" />
+    <ClInclude Include="globalDefs.h" />
     <ClInclude Include="paths.hpp" />
+    <ClInclude Include="resource1.h" />
     <ClInclude Include="resourceExtractor.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="helper.h" />
@@ -198,6 +201,12 @@
     <ClInclude Include="resourceSettingsRes.h" />
     <ClInclude Include="rwIO.h" />
     <ClInclude Include="Util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Flyff Crypt Tool.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

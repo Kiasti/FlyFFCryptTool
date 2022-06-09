@@ -3,6 +3,8 @@
 #include <intsafe.h>
 #include <shared_mutex>
 #include <map>
+#include "globalDefs.h"
+
 namespace ffParser
 {
 	constexpr unsigned long NULL_ID = 0xffffffff;

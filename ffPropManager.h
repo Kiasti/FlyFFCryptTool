@@ -9,9 +9,10 @@ namespace res
 	{
 		class propData
 		{
-			bool isPackedInOne = false;
+			bool isPackedInOne = true;
 
 			std::map<unsigned long, ItemProp> itemProp;
+			std::map<unsigned long, ItemProp> skillProp;
 			std::map<unsigned long, MoverProp> moverProp;
 
 			std::map<std::string, CHARACTER> m_mapCharacter;
@@ -31,11 +32,13 @@ namespace res
 				void spec_toBinary(int wew = 0);
 				void loadMainFiles();
 
-				void loadPropItem(ffTextParser::CScript&& scanner, propVer&& ipv = propVer::ver16);
-				void loadPropMover(ffTextParser::CScript&& scanner, propVer&& ipv = propVer::ver16);
+				void loadPropItem(ffTextParser::CScript&& scanner, propVer&& ipv = propVer::ver19);
+				void loadPropMover(ffTextParser::CScript&& scanner, propVer&& ipv = propVer::ver19);
 				void loadCharacterProp(ffTextParser::CScript&& script);
 				void loadTerrain(ffParser::text::CScanner&& scanner);
-				void loadApplet(ffParser::text::CScript&& scanner, propVer&& ipv = propVer::ver16);
+				void loadApplet(ffParser::text::CScript&& scanner, propVer&& ipv = propVer::ver19);
+
+				void loadPropSkill(ffParser::text::CScript&& scanner, propVer&& ipv = propVer::ver19);
 
 				void loadWorldInsides();
 				void loadWorldIncBase(ffParser::text::CScript&& scanner);

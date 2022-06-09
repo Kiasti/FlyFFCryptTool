@@ -15,6 +15,17 @@ void res::extract::all::operator()(const vp_Flyff& df) const
 		{
 			if (fileName.empty() || fileName == df.second[i].fileName)
 			{
+				std::filesystem::path p = archiveName;
+				p.remove_filename();
+
+				std::string outStr = p.string() + (!fileName.empty() ? fileName : df.second[i].fileName);
+				p = outStr;
+				p.remove_filename();
+
+				if (!exists(p))
+					create_directories(p);
+
+
 				std::string tempString;
 				tempString.resize(df.second[i].fileSize);
 
@@ -25,12 +36,6 @@ void res::extract::all::operator()(const vp_Flyff& df) const
 					for (auto& c : tempString)
 						c = static_cast<char>(df.first.decryption(c));
 
-				std::string outStr = archiveName;
-				std::filesystem::path p = archiveName;
-				if (p.has_parent_path())
-					outStr = p.parent_path().string();
-				outStr += "/";
-				outStr += df.second[i].fileName;
 				{
 					std::scoped_lock lck(outputFile);
 					std::cout << "extracting " << df.second[i].fileName << " to: " << outStr << "\n";
@@ -53,6 +58,17 @@ void res::extract::all::operator()(const vp_Insignia& df) const
 		{
 			if (fileName.empty() || fileName == df.second[i].fileName)
 			{
+				std::filesystem::path p = archiveName;
+				p.remove_filename();
+
+				std::string outStr = p.string() + (!fileName.empty() ? fileName : df.second[i].fileName);
+				p = outStr;
+				p.remove_filename();
+
+				if (!exists(p))
+					create_directories(p);
+
+
 				std::string tempString;
 				tempString.resize(df.second[i].fileSize);
 
@@ -64,13 +80,6 @@ void res::extract::all::operator()(const vp_Insignia& df) const
 						c = static_cast<char>(df.first.decryptionFile(c));
 
 
-
-				std::string outStr = archiveName;
-				std::filesystem::path p = archiveName;
-				if (p.has_parent_path())
-					outStr = p.parent_path().string();
-				outStr += "/";
-				outStr += df.second[i].fileName;
 				{
 					std::scoped_lock lck(outputFile);
 					std::cout << "extracting " << df.second[i].fileName << " to: " << outStr << "\n";
@@ -94,6 +103,16 @@ void res::extract::all::operator()(const vp_AesGow& df) const
 		{
 			if (fileName.empty() || fileName == df.second[i].fileName)
 			{
+				std::filesystem::path p = archiveName;
+				p.remove_filename(); 
+
+				std::string outStr = p.string() + (!fileName.empty() ? fileName : df.second[i].fileName);
+				p = outStr;
+				p.remove_filename(); 
+
+				if (!exists(p))
+					create_directories(p);
+
 				if (df.first.bEncryption)
 				{
 					unsigned long nReadCount = (df.second[i].filePos - sizeof(int) - sizeof(bool)) % 16;
@@ -107,21 +126,14 @@ void res::extract::all::operator()(const vp_AesGow& df) const
 					for (size_t j = 0; j < nEncSize / 16; ++j)
 						cryptEngine::defAes::m_crypt.DecryptBlock(&encryptedBuffer[j * 16], &blockBuffer[j * 16]);
 
+
 					encryptedBuffer.resize(0);
 					if (static_cast<size_t>(nReadCount) + static_cast<size_t>(df.second[i].fileSize) <= blockBuffer.size())
 					{
-						fs::createDirs(df.second[i].fileName, ext.outputFolder);
-						std::string outStr = archiveName;
-						std::filesystem::path p = archiveName;
-						if (p.has_parent_path())
-							outStr = p.parent_path().string();
-						outStr += "/";
-						outStr += df.second[i].fileName;
 						{
 							std::scoped_lock lck(outputFile);
 							std::cout << "extracting " << df.second[i].fileName << " to: " << outStr << "\n";
 						}
-
 						std::ofstream ofs(outStr, std::ios::out | std::ios::binary);
 						ofs.write(reinterpret_cast<char*>(&blockBuffer[0]) + nReadCount, df.second[i].fileSize);
 						ofs.close();
@@ -135,6 +147,10 @@ void res::extract::all::operator()(const vp_AesGow& df) const
 					readingFile.seekg(df.second[i].filePos);
 					readingFile.read(&tempString[0], df.second[i].fileSize);
 
+					{
+						std::scoped_lock lck(outputFile);
+						std::cout << "extracting " << df.second[i].fileName << " to: " << outStr << "\n";
+					}
 					std::ofstream ofs(df.second[i].fileName, std::ios::out | std::ios::binary);
 					ofs.write(&tempString[0], static_cast<long long>(tempString.length()));
 					ofs.close();
@@ -149,7 +165,10 @@ void res::extract::all::operator()(const vp_AesAzure& df) const
 {
 	unsigned long long crc = 0;
 	if (!fileName.empty())
+	{
+		std::ranges::transform(fileName, fileName.begin(), [](const unsigned char c) { return std::tolower(c); });
 		crc = cryptEngine::wbqt::CRC64::Compute(reinterpret_cast<const unsigned char*>(&fileName[0]), fileName.length());
+	}
 
 	if (std::ifstream readingFile(archiveName, std::ios::in | std::ios::binary); readingFile.good())
 	{
@@ -157,19 +176,17 @@ void res::extract::all::operator()(const vp_AesAzure& df) const
 		{
 			if (crc == 0|| crc == df.second[i].crc)
 			{
-				std::string outStr = archiveName;
+				
 				std::filesystem::path p = archiveName;
+				p.remove_filename();
 
-				if (p.has_parent_path()) //remove this check if want to separate not in .res
-					outStr = p.parent_path().string();
-				else
-					outStr = p.stem().string();
-				outStr += "/";
+				std::string outStr = p.string() + (!fileName.empty() ? fileName : std::to_string(df.second[i].crc) + ".txt");
+				p = outStr;
+				p.remove_filename();
 
-				if (!std::filesystem::exists(outStr))
-					std::filesystem::create_directories(outStr);
+				if (!exists(p))
+					create_directories(p);
 
-				outStr += std::to_string(df.second[i].crc);
 				{
 					std::scoped_lock lck(outputFile);
 					std::cout << "extracting " << df.second[i].crc << " to: " << outStr << "\n";
@@ -177,21 +194,26 @@ void res::extract::all::operator()(const vp_AesAzure& df) const
 
 				if (df.first.bEncryption)
 				{
-					unsigned long nReadCount = (df.second[i].offset - sizeof(int) - sizeof(bool)) % 16;
+#define UNENCRYPTED_BYTES (sizeof(short) + sizeof(short) + sizeof(bool) + sizeof(int))
+					const unsigned long nReadCount = (df.second[i].offset - UNENCRYPTED_BYTES) % 16;
 					const size_t nEncSize = (df.second[i].size + nReadCount + 15) & ~15;
-					std::vector<unsigned char> blockBuffer(nEncSize);
-					std::vector<unsigned char> encryptedBuffer(nEncSize);
+
+					std::string blockBuffer(nEncSize, '\0');
+					std::string encryptedBuffer(nEncSize, '\0');
 					readingFile.seekg(df.second[i].offset - nReadCount);
-					readingFile.read(reinterpret_cast<char*>(&encryptedBuffer[0]), static_cast<long long>(nEncSize));
+					readingFile.read(&encryptedBuffer[0], static_cast<long long>(nEncSize));
+					readingFile.close();
 
-					cryptEngine::defAes::m_crypt.Decrypt(&encryptedBuffer[0], &blockBuffer[0], static_cast<unsigned long>(nEncSize / 16ull), AES::BlockMode::ECB);
+					cryptEngine::defAes::m_crypt.Decrypt(reinterpret_cast<unsigned char*>(&encryptedBuffer[0]), reinterpret_cast<unsigned char*>(&blockBuffer[0]),
+						static_cast<unsigned long>(nEncSize / 16ull), AES::BlockMode::ECB);
+
 					encryptedBuffer.resize(0);
+					std::string finalBuff(df.second[i].size, '\0');
 
-
-					if (static_cast<size_t>(nReadCount) + static_cast<size_t>(df.second[i].size) <= blockBuffer.size())
+					memcpy(&finalBuff[0], &blockBuffer[0] + nReadCount, df.second[i].size);
 					{
-						std::ofstream ofs(outStr + ".txt", std::ios::out | std::ios::binary);
-						ofs.write(reinterpret_cast<char*>(&blockBuffer[0]) + nReadCount, df.second[i].size);
+						std::ofstream ofs(outStr, std::ios::out | std::ios::binary);
+						ofs.write(&finalBuff[0], df.second[i].size);
 						ofs.close();
 					}
 				}
@@ -200,10 +222,12 @@ void res::extract::all::operator()(const vp_AesAzure& df) const
 					std::string tempString;
 					tempString.resize(df.second[i].size);
 
+					readingFile.seekg(df.second[i].offset, std::ios::beg);
 					readingFile.read(&tempString[0], df.second[i].size);
+					
 					file::other::HdrAesAzure::rotr(reinterpret_cast<unsigned char*>(&tempString[0]), df.second[i].size);
 
-					std::ofstream ofs(outStr + ".txt", std::ios::out | std::ios::binary);
+					std::ofstream ofs(outStr, std::ios::out | std::ios::binary);
 					ofs.write(&tempString[0], df.second[i].size);
 					ofs.close();
 
@@ -222,6 +246,17 @@ void res::extract::all::operator()(const vp_Moon& df) const
 		{
 			if (fileName.empty() || fileName == df.second[i].fileName)
 			{
+				std::filesystem::path p = archiveName;
+				p.remove_filename();
+
+				std::string outStr = p.string() + (!fileName.empty() ? fileName : df.second[i].fileName);
+				p = outStr;
+				p.remove_filename();
+
+				if (!exists(p))
+					create_directories(p);
+
+
 				std::string tempString;
 				tempString.resize(df.second[i].fileSize);
 
@@ -232,18 +267,6 @@ void res::extract::all::operator()(const vp_Moon& df) const
 					for (auto& c : tempString)
 						c = static_cast<char>(df.first.decryption(c));
 
-				std::string outStr = archiveName;
-
-				if (std::filesystem::path p = archiveName; p.has_parent_path()) //remove this check if want to separate not in .res
-					outStr = p.parent_path().string();
-				else
-					outStr = p.stem().string();
-				outStr += "/";
-
-				if (!std::filesystem::exists(outStr))
-					std::filesystem::create_directories(outStr);
-
-				outStr += df.second[i].fileName;
 				{
 					std::scoped_lock lck(outputFile);
 					std::cout << "extracting " << df.second[i].fileName << "\n";
@@ -266,6 +289,16 @@ void res::extract::all::operator()(const vp_Equinox& df) const
 		{
 			if (fileName.empty() || fileName == df.second[i].fileName)
 			{
+				std::filesystem::path p = archiveName;
+				p.remove_filename();
+
+				std::string outStr = p.string() + (!fileName.empty() ? fileName : df.second[i].fileName);
+				p = outStr;
+				p.remove_filename();
+
+				if (!exists(p))
+					create_directories(p);
+
 				std::string tempString;
 				tempString.resize(df.second[i].fileSize);
 
@@ -276,17 +309,6 @@ void res::extract::all::operator()(const vp_Equinox& df) const
 					for (auto& c : tempString)
 						c = static_cast<char>(file::other::HdrEquinox::decrpytion(c, df.second[i].encKey));
 
-				std::string outStr = archiveName;
-				if (std::filesystem::path p = archiveName; p.has_parent_path())
-					outStr = p.parent_path().string();
-				else
-					outStr = p.stem().string();
-				outStr += "/";
-
-				if (!std::filesystem::exists(outStr))
-					std::filesystem::create_directories(outStr);
-
-				outStr += df.second[i].fileName;
 				{
 					std::scoped_lock lck(outputFile);
 					std::cout << "extracting " << df.second[i].fileName << " to: " << outStr << "\n";
@@ -323,6 +345,16 @@ void res::extract::all::operator()(const vp_Forsaken& df) const
 			{
 				if (cpyName.empty() || cpyName == df.second[i].fileName)
 				{
+					std::filesystem::path p = archiveName;
+					p.remove_filename();
+
+					std::string outStr = p.string() + (!fileName.empty() ? fileName : df.second[i].fileName);
+					p = outStr;
+					p.remove_filename();
+
+					if (!exists(p))
+						create_directories(p);
+
 					std::string tempString;
 					tempString.resize(df.second[i].fileSize);
 
@@ -345,17 +377,6 @@ void res::extract::all::operator()(const vp_Forsaken& df) const
 						}
 					}
 
-					std::string outStr = archiveName;
-					if (std::filesystem::path p = archiveName; p.has_parent_path())
-						outStr = p.parent_path().string();
-					else
-						outStr = p.stem().string();
-					outStr += "/";
-
-					if (!std::filesystem::exists(outStr))
-						std::filesystem::create_directories(outStr);
-
-					outStr += fileName.empty() ? df.second[i].fileName : fileName; // just cause crc and sha
 					{
 						std::scoped_lock lck(outputFile);
 						std::cout << "extracting " << df.second[i].fileName << " to: " << outStr << "\n";
@@ -387,23 +408,22 @@ void res::extract::all::operator()(const vp_NewFeiFei& df) const
 		{
 			if (isEmpty || hashId == df.second[i].uid)
 			{
+				std::filesystem::path p = archiveName;
+				p.remove_filename();
+
+				std::string outStr = p.string() + (!fileName.empty() ? fileName : std::to_string(df.second[i].uid) + ".bin");
+				p = outStr;
+				p.remove_filename();
+
+				if (!exists(p))
+					create_directories(p);
+
 				std::string tempString;
 				tempString.resize(df.second[i].size);
 
 				readingFile.seekg(df.second[i].offset);
 				readingFile.read(&tempString[0], df.second[i].size);
 
-				std::string outStr = archiveName;
-				if (std::filesystem::path p = archiveName; p.has_parent_path())
-					outStr = p.parent_path().string();
-				else
-					outStr = p.stem().string();
-				outStr += "/";
-
-				if (!std::filesystem::exists(outStr))
-					std::filesystem::create_directories(outStr);
-
-				outStr += isEmpty ? std::to_string(df.second[i].uid) + ".bin" : fileName; // just cause crc and sha
 				{
 					std::scoped_lock lck(outputFile);
 					std::cout << "extracting " << df.second[i].uid << " to: " << outStr << "\n";
@@ -428,6 +448,16 @@ void res::extract::all::operator()(const vp_Cloud& df) const
 		{
 			if (fileName.empty() || fileName == df.second[i].fileName)
 			{
+				std::filesystem::path p = archiveName;
+				p.remove_filename();
+
+				std::string outStr = p.string() + (!fileName.empty() ? fileName : df.second[i].fileName);
+				p = outStr;
+				p.remove_filename();
+
+				if (!exists(p))
+					create_directories(p);
+
 				std::string tempString;
 				tempString.resize(df.second[i].fileSize);
 
@@ -438,12 +468,6 @@ void res::extract::all::operator()(const vp_Cloud& df) const
 					for (auto& c : tempString)
 						c = static_cast<char>(df.first.decryption(c));
 
-				std::string outStr = archiveName;
-				std::filesystem::path p = archiveName;
-				if (p.has_parent_path())
-					outStr = p.parent_path().string();
-				outStr += "/";
-				outStr += df.second[i].fileName;
 				{
 					std::scoped_lock lck(outputFile);
 					std::cout << "extracting " << df.second[i].fileName << " to: " << outStr << "\n";

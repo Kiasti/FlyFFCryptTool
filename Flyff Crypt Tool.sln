@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Flyff Crypt Tool", "Flyff crypt tools.vcxproj", "{EAC78FDE-FA5D-4EDA-B40D-67FE22C18590}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PropConverter", "..\PropConverter\PropConverter.vcxproj", "{DC0DF866-A74B-4D6E-BDD9-62B8F16B4895}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,14 +21,6 @@ Global
 		{EAC78FDE-FA5D-4EDA-B40D-67FE22C18590}.Release|x64.Build.0 = Release|x64
 		{EAC78FDE-FA5D-4EDA-B40D-67FE22C18590}.Release|x86.ActiveCfg = Release|Win32
 		{EAC78FDE-FA5D-4EDA-B40D-67FE22C18590}.Release|x86.Build.0 = Release|Win32
-		{DC0DF866-A74B-4D6E-BDD9-62B8F16B4895}.Debug|x64.ActiveCfg = Debug|x64
-		{DC0DF866-A74B-4D6E-BDD9-62B8F16B4895}.Debug|x64.Build.0 = Debug|x64
-		{DC0DF866-A74B-4D6E-BDD9-62B8F16B4895}.Debug|x86.ActiveCfg = Debug|Win32
-		{DC0DF866-A74B-4D6E-BDD9-62B8F16B4895}.Debug|x86.Build.0 = Debug|Win32
-		{DC0DF866-A74B-4D6E-BDD9-62B8F16B4895}.Release|x64.ActiveCfg = Release|x64
-		{DC0DF866-A74B-4D6E-BDD9-62B8F16B4895}.Release|x64.Build.0 = Release|x64
-		{DC0DF866-A74B-4D6E-BDD9-62B8F16B4895}.Release|x86.ActiveCfg = Release|Win32
-		{DC0DF866-A74B-4D6E-BDD9-62B8F16B4895}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

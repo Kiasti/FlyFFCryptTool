@@ -13,11 +13,36 @@
 #include <type_traits>
 #include <array>
 #include "fileSys.h"
+#include "globalDefs.h"
 
 constexpr unsigned char ENC_KEY[]{ 124, 108, 129, 11, 220, 152, 221, 110, 12, 10, 10, 7, 16, 21, 23, 24, 176, 101, 117, 110, 215, 231, 127, 200 }; // gow
-constexpr char ENC_EXT[]{ "*.enc" };
+constexpr char ENC_EXT[]{ ".enc" };
+
+constexpr unsigned char level_key[]{ 221, 156, 42, 32, 22, 165, 171, 8, 31, 62, 154, 202, 41, 114, 132, 47, 56, 61, 58, 115, 130, 255, 205, 124};
+constexpr char level_ext[]{ ".lvf" };
+
+constexpr unsigned char lykan_key[]{ 97, 23, 58, 21, 91, 30, 68, 57, 111, 72, 66, 105, 108, 48, 73, 121, 55, 49, 78, 99, 55, 67, 104, 110 };
+constexpr char lykan_ext[]{ ".gx" };
+
+constexpr unsigned char tmmo_key[]{ 0x1e, 0x09, 0x13, 0x60, 0xe3, 0x05, 0x3a, 0x40, 0x03, 0x27, 0x0c, 0x6e, 0x48, 0x42, 0x54, 0xdd, 0x3d, 0xb9, 0x31, 0x53, 0xda, 0x14, 0x86, 0xcd };
+constexpr char tmmo_ext[]{ ".tmmo"};
 constexpr unsigned long UNENCRYPTED_BYTES = sizeof(short) + sizeof(short) + sizeof(bool) + sizeof(int);
-constexpr unsigned long tempkey[]{ 0x153A1761, 0x39441E5B, 0x6942486F, 0x7949306c, 0x634C3137, 0x6E684337 };
+
+constexpr unsigned char aura_key[]{ 77, 25, 60, 1, 200, 232, 150, 13, 132, 15, 77, 25, 75, 210, 180, 175, 5, 250, 222, 111, 77, 57, 192, 77 };
+constexpr char aura_ext[]{ ".aura" };
+
+constexpr unsigned char metaverse_key[]{ 201, 25, 60, 1, 200, 232, 150, 13, 132, 15, 99, 80, 75, 210, 180, 175, 5, 250, 222, 111, 99, 57, 192, 201 };
+constexpr char metaverse_ext[]{ ".meta" };
+
+constexpr unsigned char eof_key[]{ 101, 69, 65, 105, 233, 232, 149, 10, 120, 10, 15, 75, 80, 215, 210, 155, 5, 145, 200, 111, 165, 55, 192, 99 };
+constexpr char eof_ext[]{ ".eofflyff" };
+
+constexpr unsigned char uni_key[]{ 90, 25, 60, 1, 200, 232, 150, 13, 132, 15, 69, 80, 75, 210, 180, 175, 5, 250, 222, 111, 99, 57, 192, 67 };
+constexpr char uni_ext[]{ ".rds" };
+
+constexpr unsigned char godsofwar_key[]{ 124, 108, 129, 11, 220, 152, 221, 110, 12, 10, 10, 7, 16, 21, 23, 24, 176, 101, 117, 110, 215, 231, 127, 200 };
+constexpr char godsofwar_ext[]{ ".gow" };
+
 
 /** @brief Contains the File Structures used for the pack files. */
 namespace res
@@ -52,7 +77,8 @@ namespace res
 
 		namespace other {
 			struct ResInsanity;
-			struct HdrAesGOW; }
+			struct HdrAesGOW; 
+		}
 
 		/** @brief Main types for the game "FlyFF" */
 		namespace flyff
@@ -208,7 +234,7 @@ namespace res
 
 				std::string hdrString;
 				bool compressed = false;
-				explicit HdrAesGOW(std::ifstream& ifs);
+				HdrAesGOW(std::ifstream& ifs);
 
 				[[nodiscard]] static long long defaultStartPos() { return sizeof(short); }
 				void cleanup() { hdrString.resize(0); }
@@ -242,6 +268,40 @@ namespace res
 				long long time_;
 				explicit ResAesAzure(const HdrAesAzure& hdr, std::streampos& startPos);
 			};
+
+
+
+			struct HdrLykan
+			{
+				unsigned short firstCrc;
+				short fileVersion;
+				bool bEncryption;
+				int headerSize;
+
+				short fileNumber;
+
+				std::string headerStr;
+				explicit HdrLykan(std::ifstream& ifs);
+				static void rotr(unsigned char* data, size_t size);
+				static void rotl(unsigned char* data, size_t size);
+
+				void cleanup() { headerStr.resize(0); }
+				[[nodiscard]] static long long defaultStartPos() { return 0; }
+				[[nodiscard]] static Type getResourceType() { return Type::AesAzure; }
+			};
+
+			struct ResLykan  // Actual size
+			{
+				char szResourceFile[128]{};
+				unsigned long dwOffset;
+				unsigned long dwFileSize;
+				unsigned char byEncryptionKey;
+				bool bEncryption;
+
+				explicit ResLykan(const HdrLykan& hdr, std::streampos& currentPos);
+			};
+
+
 
 			struct HdrMoon
 			{

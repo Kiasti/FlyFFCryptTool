@@ -110,15 +110,163 @@ namespace res::props
 {
 	enum class propVer { ver15, ver16, ver19 };
 
-	static const char* defaultDefines[] = { "define.h", "defineneuz.h", "definequest.h", "definejob.h", "defineitem.h", "defineworld.h",
-			"defineitemkind.h", "lang.h", "defineobj.h", "defineattribute.h", "defineskill.h", "definetext.h", "definesound.h", "resdata.h",
-			"wndstyle.h", "definelordskill.h", "definehonor.h" , "continentdef.h"
+	static const char* defaultDefines[] = { "ContinentDef.h", "define.h", "defineattribute.h", "defineevent.h", "definehonor.h", "defineitem.h", "defineitemgrade.h", 
+		"defineitemkind.h", "defineitemtype.h", "definejob.h", "definelordskill.h", "definemapcomboboxdata.h", "defineneuz.h", "defineobj.h",  "definequest.h", 
+		"defineskill.h", "definesound.h", "definetext.h", "defineworld.h", "lang.h", "resdata.h", "wndstyle.h"
 	};
-	static const char* defaultTxt[] = { "character.txt.txt", "character-etc.txt.txt", "character-school.txt.txt" };
 
-	static const char* mainResourceFiles[] = {"terrain.inc", "spec_item.txt", "propitem.txt", "mdlobj.inc", "mdldyna.inc",
-				"resdata.inc", "character.inc", "character-etc.inc"
+	static const char* defaultTxtDefs[] = { "character.txt.txt", "character-etc.txt.txt", "etc.txt.txt", "honorList.txt.txt", "lordskill.txt.txt", "MiniGame_Alphabet.txt.txt",
+		"PatrolDestination.txt.txt", "propCtrl.txt.txt", "propItem.txt.txt", "propItemEtc.txt.txt", "propKarma.txt.txt", "propMapComboBoxData.txt.txt", "propMotion.txt.txt",
+		"propMover.txt.txt", "propQuest.txt.txt", "propQuest-DungeonandPK.txt.txt", "PropQuest-DungeonandPKtxt.txt", "propQuest-RequestBox.txt.txt", "propQuest-Scenario.txt.txt",
+		"propSkill.txt.txt", "propTroupeSkill.txt.txt", "QuestDestination.txt.txt", "resData.txt.txt", "textClient.txt.txt", "textEmotion.txt.txt", "world.txt.txt"
 	};
+
+	static const char* defaultInc[] = { "accessory.inc", "character.inc", "character-etc.inc", "collecting.inc", "constant.inc", "couple.inc", "diepenalty.inc", "election.inc",
+		"etc.inc", "exptable.inc", "filter.inc", "invalidname.inc", "jobitem.inc", "layer.inc", "letter.inc", "letter2.inc", "lordevent.inc", "mdldyna.inc", "mdlobj.inc", "mount.inc",
+		"pet.inc", "pksetting.inc", "propbadge.inc", "propdropevent.inc", "propenchant.inc", "propevent.inc", "propflyffpiece.inc", "propgiftbox.inc", "propguildquest.inc",
+		"propitemetc.inc", "propjob.inc", "propmapcomboboxdata.inc", "propmoverex.inc", "proppackitem.inc", "proppartyquest.inc", "propquest.inc", "propquest-dungeonandpk.inc",
+		"propquest-requestbox.inc", "propquest-requestbox2.inc", "propquest-scenario.inc", "randomeventmonster.inc", "randomoption.inc", "resdata.inc", "terrain.inc", "textclient.inc",
+		"ticket.inc", "transformitem.inc", "worldtooltip.inc", "world.inc"
+	};
+	static const char* defaultCSV[] = { "propctrl.csv", "propitem.csv", "propmotion.csv", "propmover.csv", "propobj.csv", "propskill.csv", "propskilladd.csv", "proptroupeskill.csv" };
+	static const char* defaultTxt[] = { "ai_script.txt", "anarchy.txt", "createmonster.txt", "EnvironmentEffect.txt", "except.txt", "Exchange_Script.txt", "GuildCombat.txt", 
+		"honorList.txt", "ItemMergeRandomOption.txt", "lordskill.txt", "MiniGame_Alphabet.txt", "MiniGame_FiveSystem.txt", "MiniGame_KawiBawiBo.txt", "MiniGame_Reassemble.txt", 
+		"PaidWorldSet.txt", "PaidWorldTicket.txt", "PiercingSize.txt", "propCtrl.txt", "propItem.txt", "propKarma.txt", "propLang.txt", "propMotion.txt", "propMover.txt",  
+		"propSkill.txt", "propTroupeSkill.txt", "provide.txt", "removequest.txt", "s.txt", "Spec_Item.txt", "spevent.txt", "StartPartyQuestInfo.txt", "teleportscroll.txt", 
+		"textEmotion.txt",  "TreasureCombine.txt", "TreasureItem.txt", "Ultimate_GemAbility.txt", "Ultimate_UltimateWeapon.txt"
+	};
+
+	static const char* wndtiles[] = { "wndedittile00.tga", "wndedittile01.tga", "wndedittile02.tga", "wndedittile03.tga", "wndedittile04.tga", "wndedittile05.tga", "wndedittile06.tga", 
+		"wndedittile07.tga", "wndedittile08.tga", "wndedittile09.tga", "wndedittile10.tga", "WndEditTile200.tga", "WndEditTile201.tga", "WndEditTile202.tga", "WndEditTile203.tga",
+		"WndEditTile204.tga", "WndEditTile205.tga", "WndEditTile206.tga", "WndEditTile207.tga", "WndEditTile208.tga", "WndTile00.tga", "WndTile01.tga", "WndTile02.tga", "WndTile03.tga",
+		"WndTile04.tga", "WndTile05.tga", "WndTile06.tga", "WndTile07.tga", "WndTile08.tga", "WndTile09.tga", "WndTile10.tga", "WndTile11.tga", "WndTile200.tga", "WndTile201.tga", 
+		"WndTile202.tga", "WndTile203.tga", "WndTile204.tga", "WndTile205.tga", "WndTile206.tga", "WndTile207.tga", "WndTile208.tga", "WndTile209.tga", "WndTile210.tga", "WndTile211.tga",
+		"WndTile300.tga", "WndTile301.tga", "WndTile302.tga", "WndTile303.tga", "WndTile304.tga", "WndTile305.tga", "WndTile306.tga", "WndTile307.tga", "WndTile308.tga", "WndTile309.tga",
+		"WndTile310.tga", "WndTile311.tga"
+	};
+
+	namespace levelFlyffFile
+	{
+		static const char* mainResource[] = { "Achievements.inc", "advteleport.txt", "Autoconsumablefilter.inc", "Crafting.inc", "Dailyreward.txt", "globalbuffs.inc",
+				"jobchangerewards.inc", "Luckyjackpot.inc", "Monsterhunt.inc", "TriggerQuests.inc", "charinfo.inc", "wiki_item.inc", "glowchange.inc"
+		};
+
+		static const char* mainResourceDefines[] = { "defineachievementstypes.h" };
+		static const char* mainResourceTxt[] = { "globalbuffs.txt.txt", "propbadge.txt.txt" };
+
+		static const char* themeResource[] = { "back_slotitem.bmp", "achievbg.tga", "shopitem.tga", "teleportperso.tga", "shopbuy.tga", "shopfriend.tga", "wndchgelemitem.tga",
+			"check01.tga", "check02.tga", "crossedswords.png", "easy.tga", "medium.tga", "hard.tga", "dmg.png", "health.png", "level.png", "sablier.png", "farmpausebutton.tga",
+			"farmplaybutton.tga", "safteygauge.bmp", "Wndinventorytool_element.tga", "wndinventorytoolclose_element.tga", "wndinventorytool_dem.tga", "wndinventorytool_cosmetic.tga",
+			"wndinventorytoolclose_cosmetic.tga", "wndinventorytool_macro.tga", "wndinventorytoolclose_macro.tga", "slotknight.bmp", "slotblad.bmp", "slotjes.bmp", "slotran.bmp",
+			"slotringm.bmp", "slotbillfor.bmp", "slotpsy.bmp", "slotelem.bmp", "slotlord.bmp", "40.bmp", "slotstormb.bmp", "41.bmp", "slotforcem.bmp", "45.bmp", "slotflor.bmp",
+			"44.bmp", "slotelel.bmp", "47.bmp", "slotment.bmp", "46.bmp", "slotwindl.bmp", "slot42.bmp", "slotcracks.bmp", "43.bmp", "back_slotitem1.bmp", "back_slotitem2.bmp",
+			"back_slotitem3.bmp", "back_slotitem4.bmp", "luckyjackpotcadre.bmp", "bannerlotery2.tga", "bannerlotery3.tga", "bannerlotery4.tga", "bannerlotery1.tga", "wndnotuse.tga",
+			"monsterhuntbonus.png", "testborder.tga", "imgnavarrow.bmp", "buttmap04.tga", "buttmap01.tga", "buttmap02.tga", "buttmap05.tga", "navdunfog.tga", "buttdestination.bmp",
+			"wdguildwar_mask.dds", "alphacircle.tga",
+			//possibly somewhere else
+			"jobmercenary.tga", "jobacrobat.tga", "jobassist.tga", "jobmagician.tga", "jobknight.tga", "jobblade.tga", "jobjester.tga", "jobranger.tga", "jobringmaster.tga",
+			"jobbillposter.tga", "jobpsychikeeper.tga", "jobelementor.tga", "jobknightmaster.tga", "jobblademaster.tga", "jobjestermaster.tga", "jobrangermaster.tga",
+			"jobringmastermaster.tga", "jobpsychikeepermaster.tga", "jobelementormaster.tga", "jobknighthero.tga", "jobbladehero.tga", "jobjesterhero.tga", "jobrangerhero.tga",
+			"jobringmasterhero.tga", "jobbillposterhero.tga", "jobpsychikeeperhero.tga", "jobelementorhero.tga", "joblordtemplerhero.tga", "jobstormbladehero.tga",
+			"jobwindlurkerhero.tga", "jobcrackshooterhero.tga", "jobfloristhero.tga", "jobforcemasterhero.tga", "jobmentalisthero.tga", "jobelementorlordhero.tga", "charinfo40.png",
+			"charinfo41.png", "charinfo42.png", "charinfo43.png", "charinfo44.png", "charinfo45.png", "charinfo46.png", "charinfo47.png", "jobnpc.tga", "itemgrade5.dds",
+
+			// more stuff
+			"gaumagchargebg.tga", "gaumagchargehead.tga", "gaumagchargebody.tga", "gaumagchargebody2.tga", "gaumagchargetail.tga", "gaupartyhpbg.tga", "gaupartyhp.tga",
+			"gaupartyhp_dbf.tga", "gauaccelbg.tga", "gauaccelinner.tga", "gauangelexpbg.tga", "gauangelexp.tga", "default.tgm", "imgmaparrow.bmp", "imgmarrowparty.bmp",
+			"buttteleport.bmp", "buttwndmin.tga", "buttwndmax.tga", "lvup.bmp", "gauemptynormal.bmp", "lvdn.bmp", "lvup2.bmp", "lvdn2.bmp", "texguildcombatwinner.bmp",
+			"texguildcombatbest.bmp", "wndcolocountdesign.tga", "rangreen02.tga", "wndinventorytool.tga", "wndinventorytoolclose.tga", "butttreeopen.tga", "butttreeclose.tga",
+			"buttcscrbar.bmp", "buttvscrpup.bmp", "buttvscrpdown.bmp", "buttvscrpbar.bmp", "buttvscrup.tga", "buttvscrdown.tga", "exchangearrow.tga",
+
+			//element something?
+			"feu.tga", "eau.tga", "electrique.tga", "vent.tga", "terre.tga", "neutre.tga", "buttquicklistdn.tga", "selectcadre03.png", "selectcadre01.png",
+			"wndfield.bmp", "wndaboutflyff.tga", "wndgauge.tga", "inventorybageff.tga", "wndcommonbanknotuse.tga", "wndnewcharacter01.tga", "butstateok.tga", "butstatecancel.tga",
+			"buttcharapply.tga", "buttcharreset.tga", "selectcadre02.png", "wndcharacter2_1.tga", "wndcharacter2.tga", "buttcharplus.bmp", "wndcharacter2_2.tga",
+			"imgskillvagrant.tga", "back_hero_kntdrawing.tga", "back_hero_blddefence.tga", "back_hero_blddefence.tga", "back_hero_jstsilence.tga", "back_hero_raghawkeye.tga",
+			"back_hero_rigreturn", "back_hero_bildisenchant.tga", "back_hero_psystone.tga", "back_hero_elecursemind.tga", "back_me.tga", "back_night.tga", "slotmer.bmp",
+			"skilltreelord.tga", "back_blade.tga", "skilltreestormb.tga", "back_as.tga", "back_bill.tga", "slotas.bmp", "skilltreeforcm.tga", "back_ring.tga", "skilltreeflor.tga",
+			"back_ma.tga", "back_ele.tga", "slotmag.bmp", "skilltreelel.tga", "back_psy.tga", "skilltreewindl.tga", "back_rag.tga", "skilltreecracks.tga", "wndpostmark.tga",
+			"yellowbutten.tga", "buttok2.bmp", "wnddisableblue.bmp", "wnddisableblack.bmp", "wnddisablered.bmp", "gauemptysmall.bmp", "gaufillsmall.bmp", "questuipapergreen.tga",
+			"questuipaperred.tga", "questuipapergray.tga", "questuipaperyellow.tga", "wndtrash.png", "wndtrash2.png", "gaufillnormal.bmp", "buttnormal02.tga", "bg_coupleskill.tga",
+			"safetysuccess.bmp", "safetyfailure.bmp", "cologauge01.bmp", "buttlockerinstall.bmp", "buttlockerdismantle.bmp", "wndmapblind.dds", "wndvolumebar.tga",
+			"buttspin.tga", "partyleader.png", "petlevelbg.tga", "petstatusbg.tga", "buttchance.bmp", "buttyes.tga", "buttno.tga", "buffpetstatusbg .tga",
+			"looklchange01.tga", "wndpvp2.tga", "checkred.bmp", "checkorange.bmp", "checkyellow.bmp", "checkgreen.bmp", "checkblue.bmp", "checkindigo.bmp",
+			"checkviolet.bmp", "buttstop.bmp", "buttstart.bmp", "hotkey.inc", "wndtaskmenu.tga", "wndbuttmacrochat.tga", "wndchatedit00_1.tga", "wndchatedit1.tga", "wndchatedit02.tga",
+			"wndvendorarrowex.tga", "mapnpcpositionmark.bmp", "hyperlinkusermark.bmp", "teleportmark01.tga", "teleportmark02.tga",
+
+			"alert_character.bmp",
+
+		};
+
+		static const char* themeResTexinc[] = { "navposition.inc", "navigator.inc", "icon_questemoticon.inc", "countfight.inc", "texmapbutton.inc", "texmapmonster_darkon12.inc",
+			"texmapmonster_darkon3.inc", "texmapmonster_ricis.inc", "texmapmonster_saint.inc", "texmapmonster_flaris.inc", "texmapmonster_harmonin.inc",
+			"texmapmonster_estia.inc", "texmaprainbow_npc.inc", "theme_gauflight.inc", "theme_fontdigital1.inc",
+
+		};
+
+		static const char* themeResTele[] = { "filler" };
+		static const char* iconResource[] = { "Icon_teleporterTask.png", "levelpoint.png", "votepoint.png", "icon_originpointsbind.png", "timeicon.png", "monstericon.png",
+			"vagi_rank.png", "merc_rank.png", "acro_rank.png", "assist_rank.png", "mage_rank.png", "knight_rank.png", "rm_rank.png", "bp_rank.png", "psy_rank.png", "ranger_rank.png",
+			"jester_rank.png", "icon_pvp.dds", "icon_ultimate.dds", "skill_trogiftbox02.dds", "icon_expert1.dds", "icon_expert2.dds", "icon_expert3.dds", "icon_expert4.dds",
+			"icon_expert5.dds", "icon_expert6.dds", "icon_hero.dds",  "icon_forbid.dds", "icon_navigator.dds", "icon_status.dds", "icon_applet.dds", "icon_housing.dds",
+			"icon_character.dds", "icon_inventory.dds", "icon_citemmail.dds", "icon_skill.dds", "icon_motion.dds", "icon_trade.dds", "icon_quest.dds", "icon_troupe.dds",
+			"icon_citemtime.dds", "icon_chat.dds", "icon_messenger.dds", "icon_optsound.dds", "icon_helperhelp.dds", "icon_helpertip.dds", "icon_helperfaq.dds", "icon_logout.dds",
+			"icon_quit.dds", "qoodo.dds", "icon_login.dds", "icon_selectserver.dds", "icon_createchar.dds", "icon_couple.dds", "icon_system02.png", "item_coffre_inva.png",
+			"icon_system07.png", "icon_system01.png", "icon_system05.png", "icon_system08.png", "icon_system04.png", "icon_macrochat.dds", "icon_system06.png", "icon_system03.png",
+			"icone_miseajour.tga", "icone_changementclasse.tga", "cristal.png", "icon_baruna01.dds", "icon_mastermark1.dds", "icon_mastermark2.dds", "icon_mastermark3.dds",
+			"icon_mastermark4.dds", "icon_mastermark5.dds", "icon_mastermark6.dds", "icon_heromark.dds", "icon_lock.dds", "icon_folder.dds", "icon_actionskill.dds",
+		};
+
+
+
+		static const char* clientResource[] = { "summonangelquest.inc", "itemawakening.inc", "itemblessingcancel.inc", "smeltmixjewel.inc", "smeltextraction.inc",
+			"smeltjewel.inc", "smeltchangeuniqueweapon.inc", "changeuniqueweaponinfo.inc", "smeltchangeultimateweapon.inc", "changeultimateweaponinfo.inc", "heroskillup.inc",
+			"removeattribute.inc", "smeltremovepiercing.inc", "smeltremovejewel.inc", "changeattribute.inc", "coupleskillinfo.inc", "treehelp.inc", "faq.inc", "tip.inc",
+			"lordinfo.inc", "lordrpinfo.inc", "lordcandidate.inc", "reqlvdown.inc", "minigamefindworddesc.inc", "minigamedicedesc.inc", "minigamepuzzledesc.inc",
+			"petawakcancel.inc", "petmiracle.inc", "guildcombatredchilguild.inc", "secretroomdesc.inc", "secretroomchangetaxrate.inc", "secretroomchecktaxrate.inc",
+			"secretroomboard.inc", "tip.txt.txt", "treehelp.txt.txt", "instanthelp.txt.txt", "patchclient.txt.txt", "help.txt.txt", "guide.txt.txt", "tutorial.txt.txt",
+			"faq.txt.txt"
+		};
+
+		static const char* weatherResource[] = { "moon.dds", "sundisk.bmp", "flare_3.tga", "lenzflare_001.tga", "lenzflare_002.tga", "lenzflare_003.tga", "lenzflare_004.tga",
+			"lenzflare_005.tga", "lenzflare_006.tga", "lenzflare_007.tga", "lenzflare_008.tga", "skybox01_low.dds", "skybox02_low.dds", "skybox03_low.dds",
+			"cloud01_low.dds", "cloud02_low.dds", "cloud03_low.dds", "cloud03.dds", "cloud02.dds", "cloud01.dds", "skybox01.dds", "skybox02.dds", "skybox03.dds"
+
+		};
+
+		static const char* iconTexInc[] = { "icon_target.inc", "icon_flighttargetB.inc", "icon_flighttargetarrow.inc", "icon_iconmessenger.inc", "icon_monelemantkind.inc", "icon_playerdata.inc",
+			"icon_iconskilllevel.inc"
+		};
+		static const char* tex2dSFX[] = { "dmgeffect.inc", "dmghealeffect.inc" };
+
+		//icon\\frames\\
+		//
+
+
+		//unknown
+		//"farmingfilters.txt"
+		
+		//icon_imgani_%.2d.dds
+		// theme\default\cartetresor
+		// 
+		// 
+		// 36
+		inline [[nodiscard]] std::string GetCadreBleu(const int loopcnt) { return loopcnt < 10 ? "cadrebleu_0" + std::to_string(loopcnt) : "Cardrebleu_" + std::to_string(loopcnt); }
+		//27
+		inline [[nodiscard]] std::string GetCloakLogo(const int loopcnt) { return loopcnt < 10 ? "icon_cloakslogo0" + std::to_string(loopcnt) : "icon_cloakslogo" + std::to_string(loopcnt); }
+		//11
+		inline [[nodiscard]] std::string GetHeadMesh(const int loopcnt, const int sex, bool IsHair = false) {
+			if (!IsHair)
+				return sex == 0 ? (loopcnt < 10 ? "part_malehead0" + std::to_string(loopcnt) : "part_malehead" + std::to_string(loopcnt)) 
+					: (loopcnt < 10 ? "part_femalehead0" + std::to_string(loopcnt) : "part_femalehead" + std::to_string(loopcnt))
+					; 
+			return sex == 0 ? (loopcnt < 10 ? "part_malehair0" + std::to_string(loopcnt) : "part_malehair" + std::to_string(loopcnt))
+				: (loopcnt < 10 ? "part_femalehair0" + std::to_string(loopcnt) : "part_femalehair" + std::to_string(loopcnt))
+			;
+		}
+
+	}
+
 
 	enum {
 		FILE_FILTER = 0, FILE_INVALID = 1, FILE_NOTICE = 2, FILE_GUILDCOMBAT_TEXT_1 = 3, FILE_GUILDCOMBAT_TEXT_2 = 4, FILE_GUILDCOMBAT_TEXT_3 = 5,
@@ -328,7 +476,7 @@ namespace res::props
 		unsigned long dwDestParam[6];	
 		long nAdjParamVal[6];
 		unsigned long dwChgParamVal[6];
-		int nDestData1[3];
+		int nDestData1[6];
 
 		unsigned long dwActiveSkill;
 		unsigned long dwActiveSkillRate;
@@ -417,6 +565,19 @@ namespace res::props
 		unsigned long dwPierce;
 		unsigned long dwUprouse;
 		int bAbsoluteTime;
+
+		unsigned long dwItemGrade;
+		int bCanTrade;
+		unsigned long dwMainCategory;
+		unsigned long dwSubCategory;
+		int bCanHaveServerTransform;
+		int bCanSavePotion;
+		int bCanLooksChange;
+		int blsLooksChangeMaterial;
+		int bCanUseActionSlot;
+		unsigned long dwEquipItemKeepSkill;
+		unsigned long dwMonsterGrade;
+
 
 		[[nodiscard]] unsigned long GetCoolTime() const { return dwSkillReady; }
 

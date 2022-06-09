@@ -72,7 +72,7 @@ void res::manager::loadProject()
 		if (const auto [fst, snd] = findFile(iter); snd)
 			extractSingleFile(fst->first, iter);
 	}
-	std::cout << "completed kekw" << std::endl;
+	std::cout << "Completed!" << std::endl;
 }
 
 

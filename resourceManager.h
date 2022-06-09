@@ -21,8 +21,9 @@ namespace res
 	using vp_NewFeiFei	=		ResourceFile<rfile::feifei::Hdr,			rfile::feifei::Res>;
 	using vp_Cloud		=		ResourceFile<rFileOther::HdrCloud,			rfile::flyff::Res>;
 	using vp_Insanity	=		ResourceFile<rFileOther::HdrInsanity,		rFileOther::ResInsanity>;
+	using vp_Lykan =			ResourceFile<rFileOther::HdrLykan,			rFileOther::ResLykan>;
 
-	using fs_Variant	=	std::variant<vp_Flyff, vp_Insignia, vp_AesGow, vp_AesAzure, vp_Moon, vp_Equinox, vp_Forsaken, vp_OF, vp_NewFeiFei, vp_Cloud, vp_Insanity>;
+	using fs_Variant	=	std::variant<vp_Flyff, vp_Insignia, vp_AesGow, vp_AesAzure, vp_Moon, vp_Equinox, vp_Forsaken, vp_OF, vp_NewFeiFei, vp_Cloud, vp_Insanity, vp_Lykan>;
 
 	namespace props
 	{
@@ -89,7 +90,6 @@ namespace res
 				for (const auto list = fs::getPackedFiles(std::move(folderName), std::move(ext)); auto & val : list)
 				{
 					std::string const str = val.string();
-					//auto fut = std::async(std::launch::async, &manager::loadPackedFile<T>, this, str);
 					loadPackedFile<T>(str);
 				}
 			}

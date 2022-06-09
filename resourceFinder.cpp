@@ -33,6 +33,7 @@ bool res::find::FindFile::operator()(const vp_AesGow& df) const
 
 bool res::find::FindFile::operator()(const vp_AesAzure& df) const
 {
+	std::ranges::transform(name, name.begin(), [](const unsigned char c) { return std::tolower(c); });
 	auto crc = cryptEngine::wbqt::CRC64::Compute(reinterpret_cast<const unsigned char*>(&name[0]), name.length());
 	return std::ranges::any_of(df.second.begin(), df.second.end(), [crc](const file::other::ResAesAzure& rhs) -> bool {
 			return crc == rhs.crc;
