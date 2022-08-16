@@ -69,8 +69,8 @@ namespace res
 						if constexpr(rfile::hasDoInHdr<typename T::first_type>::value)
 							second = first.doInHdr(ifs);
 						else 
-							second = loadResource<T::first_type, T::second_type::value_type>(first);
-
+							second = loadResource<typename T::first_type, typename T::second_type::value_type>(first);
+						//second = loadResource<T::first_type, T::second_type::value_type>(first);
 						first.cleanup();
 
 						std::scoped_lock lck(muxResList);
