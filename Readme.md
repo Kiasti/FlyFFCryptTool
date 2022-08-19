@@ -7,7 +7,7 @@ Other methods were obtained from reverse engineering clients.
 This does contain zlib  and crypto++ as eventually It will offer using zlib's compression, and currently it implements sha256 from the crypto++ library.
 
 if you have any questions or concerns
-	Kia#0001 - Discord
+	Kia#1411 - Discord
 	
 
 # Usages
