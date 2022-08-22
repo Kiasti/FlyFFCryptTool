@@ -12,11 +12,9 @@ namespace rng
 			static std::mutex random_mutex;
 	
 		public:
-			template<class T = unsigned long> static std::enable_if_t<std::is_floating_point_v<T> || std::is_integral_v<T>, T>
-				rand(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max())
+			template<class T = unsigned long> static T rand(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max()) 
+				requires std::is_floating_point_v<T> || std::is_integral_v<T>
 			{
-				static_assert(std::is_integral_v<T> || std::is_floating_point_v<T>, "Incorrect Type.");
-	
 				std::scoped_lock lck(random_mutex);
 				if constexpr (std::is_integral_v<T>)
 				{

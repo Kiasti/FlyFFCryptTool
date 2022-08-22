@@ -18,6 +18,13 @@
 constexpr unsigned char ENC_KEY[]{ 124, 108, 129, 11, 220, 152, 221, 110, 12, 10, 10, 7, 16, 21, 23, 24, 176, 101, 117, 110, 215, 231, 127, 200 }; // gow
 constexpr char ENC_EXT[]{ ".enc" };
 
+// forgot who's key this was.
+constexpr unsigned char TEST_KEY[] { 0x6E, 0x35, 0x58, 0x33, 0x70, 0x32, 0x44, 0x6B, 0x33, 0x7A, 0x42, 0x69, 0x6c, 0x30, 0x49, 0x79, 0x37, 0x31, 0x4c, 0x63, 
+	0x37, 0x43, 0x68, 0x6E, 0x1E, 0x21, 0xC8, 0xD2 };
+
+
+
+
 constexpr unsigned char level_key[]{ 221, 156, 42, 32, 22, 165, 171, 8, 31, 62, 154, 202, 41, 114, 132, 47, 56, 61, 58, 115, 130, 255, 205, 124};
 constexpr char level_ext[]{ ".lvf" };
 
@@ -40,7 +47,8 @@ constexpr char eof_ext[]{ ".eofflyff" };
 constexpr unsigned char uni_key[]{ 90, 25, 60, 1, 200, 232, 150, 13, 132, 15, 69, 80, 75, 210, 180, 175, 5, 250, 222, 111, 99, 57, 192, 67 };
 constexpr char uni_ext[]{ ".rds" };
 
-constexpr unsigned char godsofwar_key[]{ 124, 108, 129, 11, 220, 152, 221, 110, 12, 10, 10, 7, 16, 21, 23, 24, 176, 101, 117, 110, 215, 231, 127, 200 };
+//constexpr unsigned char godsofwar_key[]{ 124, 108, 129, 11, 220, 152, 221, 110, 12, 10, 10, 7, 16, 21, 23, 24, 176, 101, 117, 110, 215, 231, 127, 200 };
+constexpr unsigned char godsofwar_key[] {124, 108, 129, 11, 221, 153, 223, 111, 14, 11, 10, 7, 16, 21, 23, 24, 176, 101, 117, 110, 215, 231, 127, 200};
 constexpr char godsofwar_ext[]{ ".gow" };
 
 
