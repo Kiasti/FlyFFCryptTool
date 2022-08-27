@@ -23,7 +23,9 @@ constexpr unsigned char TEST_KEY[] { 0x6E, 0x35, 0x58, 0x33, 0x70, 0x32, 0x44, 0
 	0x37, 0x43, 0x68, 0x6E, 0x1E, 0x21, 0xC8, 0xD2 };
 
 
-
+// Crimson mmo key lol
+constexpr unsigned char CRIM_KEY[] { 70, 54, 89, 52, 113, 51, 69, 108, 52, 123, 67, 106, 109, 49, 74, 122, 56, 50, 77, 100, 56, 68, 105, 112 };
+constexpr char CRIM_EXT[] {".acx"};
 
 constexpr unsigned char level_key[]{ 221, 156, 42, 32, 22, 165, 171, 8, 31, 62, 154, 202, 41, 114, 132, 47, 56, 61, 58, 115, 130, 255, 205, 124};
 constexpr char level_ext[]{ ".lvf" };

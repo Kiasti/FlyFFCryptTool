@@ -13,13 +13,13 @@ res::manager rm;
 int main()
 {	
 	cryptEngine::defAes::m_crypt.SetParameters(192);
-	cryptEngine::defAes::m_crypt.StartDecryption(tmmo_key);
+	cryptEngine::defAes::m_crypt.StartDecryption(CRIM_KEY);
 
-	std::cout << "Please insert Gods Of War FlyFF folder" << std::endl;
+	std::cout << "Please insert CrimsonMMO flyff folder" << std::endl;
 	std::getline(std::cin, res::extract::folderHehe);
 
-	const std::string temp = res::extract::folderHehe;// level flyff .lvf
-	rm.loadPackedClient<res::vp_AesGow>(temp, tmmo_ext);
+	const std::string temp = res::extract::folderHehe;
+	rm.loadPackedClient<res::vp_AesGow>(temp, CRIM_EXT);
 	rm.extractAllArchives();
 
 	//if (const auto [fst, snd] = rm.findFile("mdlobj.inc"); snd)
